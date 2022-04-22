@@ -1,5 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
+import firebase from './constants/FirebaseConfig.js';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 function App() {
   return (
