@@ -1,5 +1,6 @@
-import logo from './logo.svg';
 import './App.css';
+import Header from './Header.js';
+import './Header.css';
 import firebase from './constants/FirebaseConfig.js';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
@@ -9,7 +10,6 @@ const firestore = firebase.firestore();
 
 
 function App() {
-
   const [user] = useAuthState(auth);
 
   return (
@@ -17,6 +17,7 @@ function App() {
       {user ? <ChatRoom/> : <SignIn/>}
     </div>
   );
+
 }
 
 function SignIn() {
@@ -32,6 +33,7 @@ function SignIn() {
 }
 
 function ChatRoom() {
+
   const dummy = useRef();
 
   const messagesRef = firestore.collection('messages');
@@ -64,18 +66,18 @@ const onInputText =(e) => {
   setFormValue(e.target.value);
 }
 
-  return(
-    <div>
-        <main>
-          {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg}/>)}
-          <div ref={dummy}></div>
-        </main>
-        <form onSubmit = {sendMessage}>
-            <input value={formValue} onChange={onInputText}></input>
-            <button type="submit">Send</button>
-        </form>
-    </div>
-  );
+return(
+  <div>
+    <main>
+      {messages && messages.map(msg => <ChatMessage key={msg.id} message={msg}/>)}
+      <div ref={dummy}></div>
+    </main>
+    <form onSubmit = {sendMessage}>
+      <input value={formValue} onChange={onInputText}></input>
+      <button type="submit">Send</button>
+    </form>
+  </div>
+);
 }
 
 function ChatMessage(props) {
@@ -88,5 +90,5 @@ function ChatMessage(props) {
     </div>
   )
 }
+
 export default App;
-s

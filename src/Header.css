@@ -1,0 +1,49 @@
+
+.header {
+    background-color: #F7F7F7;
+    max-width: 242px;
+    left: 0px;
+    top: 0px;
+    width: 338px;
+    height: 141px;
+}
+
+.header h1{
+
+    color: #F7F7F7;
+    text-align: left;
+
+}
+
+.header .rectangle1 {
+    background: #A168DB;
+    width: 370px;
+    height: 71px; 
+    left: -66px;
+    top: 51px;
+}
+
+.header .circle1 {
+    background: #A168DB;
+
+}
+
+.header .rectangle1 .logOut {
+    color: #A168DB;
+    background: #F7F7F7;
+    width: 40px;
+    height: 40px;
+    left: 275px;
+    top: 66px;
+}
+
+.header .addChat {
+    color: #F7F7F7;
+    background: #A168DB;
+    right: 30px;
+    top: 67px;
+}
+
+.logOutPanel {
+    
+}
