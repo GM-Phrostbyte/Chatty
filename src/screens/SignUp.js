@@ -1,3 +1,4 @@
+import './Sign.css';
 import React, { useState, useEffect } from 'react';
 import firebase from '../constants/FirebaseConfig.js';
 
@@ -12,7 +13,7 @@ function SignUp(props) {
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const signUpWithEmail = async() => {
-    const { email, password } = signupInfo;
+  const { email, password } = signupInfo;
     let user = null;
 
     try {
@@ -27,12 +28,6 @@ function SignUp(props) {
     await usersRef.doc(`${signupInfo.email}`).set({
       name: signupInfo.fullName,
     });
-
-  }
-  
-  const signInWithGoogle = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    props.auth.signInWithPopup(provider);
   }
 
   const handleFormChange = (e) => {
@@ -80,10 +75,10 @@ function SignUp(props) {
   }
 
   return (
-    <>
+    <div className="Sign">
       <h2>Sign Up</h2>
       <form onSubmit={handleSubmit}>
-        <div>
+        <div className="fields">
           <input 
               value={signupInfo.fullName}
               name="fullName"
@@ -113,18 +108,16 @@ function SignUp(props) {
               placeholder="Confirm Password"
               onChange={handleFormChange} /><br/>
           {formErrors.confirmPwd && <p>{formErrors.confirmPwd}</p>}
-          <div>
-            {formErrors.pwdMismatch && <p>{formErrors.pwdMismatch}</p>}
-          </div>
-          <button type='submit'>Sign Up</button>
+          {formErrors.pwdMismatch && <p>{formErrors.pwdMismatch}</p>}
+          <button type='submit' className='login'>Sign Up</button>
         </div>
       </form>
 
-      <button onClick={signInWithGoogle}>Connect with Google</button>
+      <button onClick={props.google}>Connect with Google</button>
       <h4>Already have an account?
-        <button onClick={props.switch}>Sign In</button>
+        <button onClick={props.switch} className="signup">Sign In</button>
       </h4>
-    </>
+    </div>
     );
   }
 

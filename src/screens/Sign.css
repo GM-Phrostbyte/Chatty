@@ -1,0 +1,86 @@
+ .Sign body {
+    background-color: #A168DB;
+    font-family: verdana;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .Sign {
+    background-color: rgb(238, 235, 235);
+    text-align: center;
+    max-width: 728px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 15px;
+  }
+
+  .Sign h2 {
+      text-align: center;
+      padding: 0 0 20px 0;
+      border-bottom: 3px solid #A168DB;
+  }
+
+  .Sign h4 {
+    margin: 16px 0;
+    text-align: center;
+    font-size: 12px;
+  }
+
+  .signup {
+    font-size: 14px;
+    font-weight: 300;
+    border: none;
+    background: none;
+    color: #A168DB;
+  }
+
+  .Sign p {
+    color: #E56969;
+    font-family: georgia;
+    text-align: center;
+    font-size: 14px;
+  }  
+
+  .Sign form {
+    display: flex;
+    padding: 0 40px;
+    box-sizing: border-box;
+  }
+
+  .Sign form .fields {
+    position: relative;
+    margin: 30px 0;
+  }
+
+  .Sign .fields input {
+    width: 100%;
+    padding: 0 10px;
+    height: 40px;
+    font-size: 16px;
+    border: round;
+    border-radius: 5px;
+    background: none;
+    outline: none;
+}
+
+  .Sign button {
+    font-family: verdana;
+    font-weight: 200;
+    width: 70%;
+    height: 50px;
+    padding: 0 10px;
+    border-radius: 25px;
+    font-size: 14px;
+    background-color: #A168DB;
+    color: #EEEEEE;
+  }
+
+  
+
+  
+
+
+
+  
