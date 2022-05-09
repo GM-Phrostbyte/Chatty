@@ -2,10 +2,13 @@ import './Header.css'
 import firebase from './constants/FirebaseConfig.js';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-import React, { useState, useRef, Component } from 'react';
+import React, { useState, useEffect, useRef, Component } from 'react';
 import { signOut } from 'firebase/auth';
+
 const auth = firebase.auth();
 const firestore = firebase.firestore();
+const usersRef = firestore.collection("users");
+
 
 function Header() {
     return (
@@ -16,9 +19,16 @@ function Header() {
 }
 
 function Details() {
-    const [chatVisibility, setChat] = useState(false);
 
+    const [chatVisibility, setChat] = useState(false);
     const [logOutVisibility, setLogOut] = useState(false);
+    const [info, setInfo] = useState('');
+
+    useEffect(
+        () => {
+            chicken();
+        }
+    );
 
     const toggleChat = () => {
         setChat((prev) => !prev)
@@ -27,10 +37,17 @@ function Details() {
         setLogOut((prev) => !prev);
     }
 
+    const chicken = async() => {
+        const email = auth.currentUser.email;
+        const snapshot = await usersRef.doc(email).get(); 
+        setInfo(snapshot.data().name);
+    }
+   
+
     return (
         <div>
             <div className="rectangle1">
-                <h1 className="displayName">MyName</h1>
+                <h1 className="displayName">{info}</h1>
                 <button className = "logOut" onClick = {toggleLogOut}>logOut</button>
                 <button className = "newChat" onClick = {toggleChat}>addChat</button>
             </div>
@@ -66,7 +83,7 @@ function ChatPanel(props) {
 }
 
 function LogOutPanel(props) {
-    
+
     const togglePanel = () => {
         props.toggle();
     }
@@ -78,7 +95,7 @@ function LogOutPanel(props) {
             </div>
             <form>
                 <div className= 'theFunniShape'>
-                    <button className='signOut' onClick = {auth.signOut}>SIGN OUT</button>
+                    <button className='signOut' onClick = {() => auth.signOut()}>SIGN OUT</button>
                 </div>
                 <div className= 'theFunniShape'>
                     <button className='return' onClick = {togglePanel}>RETURN</button>
