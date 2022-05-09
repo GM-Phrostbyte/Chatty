@@ -14,7 +14,7 @@ function App() {
 
   return (
     <div className="App">
-      {user ? <ChatRoom/> : <SignIn/>}
+      {user ? <Header/> : <SignIn/>}
     </div>
   );
 

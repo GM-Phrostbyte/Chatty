@@ -30,12 +30,12 @@ function Details() {
     return (
         <div>
             <div className="rectangle1">
-                <h1 className="displayName">Yes</h1>
-                <button type="logOut" onSubmit = {toggleLogOut}>logOut</button>
+                <h1 className="displayName">MyName</h1>
+                <button className = "logOut" onClick = {toggleLogOut}>logOut</button>
+                <button className = "newChat" onClick = {toggleChat}>addChat</button>
             </div>
-            <ChatPanel visible={chatVisibility}></ChatPanel>
-            <button type="addChat" onSubmit = {toggleChat}>addChat</button>
-            <LogOutPanel visible={logOutVisibility}></LogOutPanel>
+            <ChatPanel visible={chatVisibility} toggle={toggleChat}></ChatPanel>
+            <LogOutPanel visible={logOutVisibility} toggle={toggleLogOut}></LogOutPanel>
         </div>
     )
 }
@@ -47,18 +47,18 @@ function ChatPanel(props) {
     }
 
     return (
-        <div className = 'chatPanel'>
+        <div className = 'chatPanel' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
             <div>
-                <input type="button" className="x" onClick={togglePanel}>x</input>
+                <button className="x" onClick={togglePanel}>x</button>
                 <h1>New Message</h1>
             </div>
             <form>
                 <div className = 'newMessage'>
                     <div className = 'circle1'></div>
-                    <input className="newUser" value = "newFriend">Enter Email</input>
+                    <input type='email' className="newUser" value = "newFriend"/>
                 </div>
                 <div className = 'newMessageSubmit'>
-                    <button onSubmit = {togglePanel} >Next</button>
+                    <button onClick = {togglePanel} >Next</button>
                 </div>
             </form>
         </div>
@@ -72,16 +72,16 @@ function LogOutPanel(props) {
     }
 
     return (
-        <div className = 'logOutPanel'>
+        <div className = 'logOutPanel' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
             <div className = "logOutHeader">
                 <h1>Are you sure?</h1>
             </div>
             <form>
                 <div className= 'theFunniShape'>
-                    <button className='signOut' onSubmit = {signOut}>SIGN OUT</button>
+                    <button className='signOut' onClick = {auth.signOut}>SIGN OUT</button>
                 </div>
                 <div className= 'theFunniShape'>
-                    <button className='return' onSubmit = {togglePanel}>RETURN</button>
+                    <button className='return' onClick = {togglePanel}>RETURN</button>
                 </div>
             </form>
         </div>
