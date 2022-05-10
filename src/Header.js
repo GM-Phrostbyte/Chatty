@@ -22,7 +22,7 @@ function Details() {
 
     const [chatVisibility, setChat] = useState(false);
     const [logOutVisibility, setLogOut] = useState(false);
-    const [info, setInfo] = useState('');
+    const [info, setInfo] = useState(' ');
 
     useEffect(
         () => {

@@ -23,7 +23,6 @@ function SignUp(props) {
         alert(error.message);
         return;
     }
-
     
     console.log(user) // a lot of information 
 
@@ -119,9 +118,9 @@ function SignUp(props) {
       <h4>Already have an account?
         <button onClick={props.switch} className="signup">Sign In</button>
       </h4>
+      
     </div>
     );
   }
-
 
   export default SignUp;

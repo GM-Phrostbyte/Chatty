@@ -79,30 +79,34 @@ function SignIn(props) {
       {active ? 
         <div className="Sign">
           <h2>Log In</h2>
-          <form onSubmit={handleSubmit}>
-            <div className="fields">
-              <input 
-                name='email'
-                placeholder='Email' 
-                value={signinInfo.email} 
-                onChange={handleFormChange} /><br/>
-              {formErrors.email && <p>{formErrors.email}</p>}
-              <input 
-                name='password'
-                type='password' 
-                placeholder='Password' 
-                value={signinInfo.password} 
-                onChange={handleFormChange} /><br/>
-              {formErrors.password && <p>{formErrors.password}</p>}
-              <button type='submit' >Log In</button>
-            </div>
-          </form>
+          <div>
+            <form onSubmit={handleSubmit}>
+              <div className="fields">
+                <input 
+                  name='email'
+                  placeholder='Email' 
+                  value={signinInfo.email} 
+                  onChange={handleFormChange} /><br/>
+                {formErrors.email && <p>{formErrors.email}</p>}
+                <input 
+                  name='password'
+                  type='password' 
+                  placeholder='Password' 
+                  value={signinInfo.password} 
+                  onChange={handleFormChange} /><br/>
+                {formErrors.password && <p>{formErrors.password}</p>}
+                <button type='submit' >Log In</button>
+              </div>
+            </form>
+          </div>
 
+          <div>
             <button onClick={signInWithGoogle}>Connect With Google</button>
 
             <h4>Don't have an account?
-              <button onClick={switchPage} className="signup" >Sign Up</button>
-            </h4>
+            <button onClick={switchPage} id="signup" >Sign Up</button></h4>
+          </div>
+
         </div> 
       : <SignUp auth={props.auth} switch={switchPage} google={signInWithGoogle}/>}
     </div>

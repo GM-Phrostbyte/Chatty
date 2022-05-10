@@ -28,12 +28,13 @@
     font-size: 12px;
   }
 
-  .signup {
+  #signup {
     font-size: 14px;
     font-weight: 300;
     border: none;
     background: none;
     color: #A168DB;
+    margin-left: -200px;
   }
 
   .Sign p {
