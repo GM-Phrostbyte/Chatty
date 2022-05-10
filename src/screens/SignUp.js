@@ -1,6 +1,7 @@
 import './Sign.css';
 import React, { useState, useEffect } from 'react';
 import firebase from '../constants/FirebaseConfig.js';
+import './SignUp.css';
 
 const firestore = firebase.firestore();
 
@@ -23,9 +24,10 @@ function SignUp(props) {
         return;
     }
 
+    
     console.log(user) // a lot of information 
 
-    await usersRef.doc(`${signupInfo.email}`).set({
+    await usersRef.doc(signupInfo.email).set({
       name: signupInfo.fullName,
     });
   }
@@ -78,7 +80,7 @@ function SignUp(props) {
     <div className="Sign">
       <h2>Sign Up</h2>
       <form onSubmit={handleSubmit}>
-        <div className="fields">
+        <div style={{marginTop: "-100%"}}>
           <input 
               value={signupInfo.fullName}
               name="fullName"
@@ -120,5 +122,6 @@ function SignUp(props) {
     </div>
     );
   }
+
 
   export default SignUp;

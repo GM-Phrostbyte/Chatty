@@ -1,4 +1,6 @@
 import './App.css';
+import Header from './Header.js';
+import './Header.css';
 import firebase from './constants/FirebaseConfig.js';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
@@ -9,12 +11,11 @@ const auth = firebase.auth();
 const firestore = firebase.firestore();
 
 function App() {
-
   const [user] = useAuthState(auth);
 
   return (
     <div className="App">
-      {user ? <ChatRoom /> : <SignIn auth={auth} />}
+      {user ? <Header /> : <SignIn auth={auth}/>}
     </div>
   );
 }
@@ -62,15 +63,15 @@ function ChatRoom() {
 }
 
 function ChatMessage(props) {
-  const { text, uid } = props.message;
+  const {text, uid} = props.message;
 
   const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
-  
-  return (
-    <div className={`message ${messageClass}`}>
+
+  return(
+    <div className={'message ' + messageClass}>
       <p>{text}</p>
     </div>
-  );
+  )
 }
 
 export default App;
