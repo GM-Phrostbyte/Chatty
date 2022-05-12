@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import './App.css';
+// import './App.css';
 import Header from './Header.js';
 import './Header.css';
 import firebase from './constants/FirebaseConfig.js';
@@ -7,6 +7,7 @@ import firebase from './constants/FirebaseConfig.js';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import SignIn from './screens/SignIn';
+
 
 const auth = firebase.auth();
 const firestore = firebase.firestore();
