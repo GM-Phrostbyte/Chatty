@@ -1,15 +1,19 @@
-import './App.css';
+import React, { useState, useRef } from 'react';
+// import './App.css';
 import Header from './Header.js';
 import './Header.css';
 import firebase from './constants/FirebaseConfig.js';
+
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-import React, { useState, useRef } from 'react';
 import SignIn from './screens/SignIn';
+
 
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 
+
+// main App component
 function App() {
   const [user] = useAuthState(auth);
 

@@ -101,10 +101,10 @@ function SignIn(props) {
           </div>
 
           <div>
-            <button onClick={signInWithGoogle}>Connect With Google</button>
+            <button class="btn btn-outline" onClick={signInWithGoogle}>Connect With Google</button>
 
-            <h4>Don't have an account?
-            <button onClick={switchPage} id="signup" >Sign Up</button></h4>
+            <h4>Don't have an account?</h4>
+            <button class="btn btn-primary" onClick={switchPage} >Sign Up</button>
           </div>
 
         </div> 

@@ -6,9 +6,7 @@ import './SignUp.css';
 const firestore = firebase.firestore();
 
 function SignUp(props) {
-
   const usersRef = firestore.collection('users');
-
   const [signupInfo, setSignupInfo] = useState({fullName: '', email: '', password: '', confirmPwd: ''});
   const [formErrors, setFormErrors] = useState({});
   const [hasSubmitted, setHasSubmitted] = useState(false);
