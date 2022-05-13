@@ -1,9 +1,101 @@
 // Override default variables before the import
-$body-bg: antiquewhite;
+$auth-card-width: 30rem;
+$auth-card-height: 40rem;
+$primary: #A168DB;
+$secondary: #F6F6F6;
+$body-color: #656565;
+$full-height: 100vh;
+$gradient: linear-gradient(127.13deg, rgba(81, 145, 240, 0.2) 9.04%, rgba(81, 145, 240, 0) 71.54%), linear-gradient(0deg, #905FC1, #905FC1);
+
+// buttons
+$button-border-radius: 45px;
+
+
+// auth pages
+$auth-header-color: white;
+$auth-small-text-color: #919191;
+$auth-google-text-color: $body-color;
+$auth-border-radius: 36px;
+$auth-button-padding: 7rem;
+$auth-input-background: #EEEEEE;
+
+// $theme-colors: (
+//   "primary":    $primary,
+//   "secondary":  $secondary,
+//   "success":    $success,
+//   "info":       $info,
+//   "warning":    $warning,
+//   "danger":     $danger,
+//   "light":      $light,
+//   "dark":       $dark
+// );
+
 // Import Bootstrap and its default variables
-@import '~bootstrap/scss/bootstrap.scss';
+@import "~bootstrap/scss/bootstrap.scss";
+.btn {
+    border-radius: $button-border-radius;
+}
+
+.card {
+  width: $auth-card-width;
+  margin-right: auto;
+  margin-left: auto;
+  // height: $auth-card-height;
+  border: 0px;
+  border-radius: $auth-border-radius;
+    .h2 {
+        color: $auth-header-color;
+        margin: 0;
+    }
+
+    &-header {
+        background-color: $primary;
+        margin-top: -1vh;
+
+        &:first-child {
+            border-top-right-radius: $auth-border-radius;
+            border-top-left-radius: $auth-border-radius;
+        }
+    }
+    .btn {
+        padding-left: $auth-button-padding;
+        padding-right: $auth-button-padding;
+    }
+
+    .btn-link {
+        font-weight: 600;
+        text-decoration: none;
+        padding-left: 1rem;
+        padding-right: 0px;
+    }
+
+    .google {
+        padding-left: 4rem;
+        padding-right: 4rem;
+    }
+
+    .form-control {
+        margin-top: 1rem;
+        padding: 1rem;
+        border-radius: $button-border-radius;
+        background-color: $auth-input-background;
+    }
+}
+
+.auth-container {
+    height: $full-height;
+    justify-content: center;
 
 
-body {
-    background-color: antiquewhite;
+}
+
+.App {
+    height: $full-height;
+    margin: 0;
+}
+
+.form-actions {
+    margin: 0;
+    background-color: transparent;
+    text-align: center;
 }
