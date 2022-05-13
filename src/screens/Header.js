@@ -1,5 +1,5 @@
 import './Header.css'
-import firebase from './constants/FirebaseConfig.js';
+import firebase from '../constants/FirebaseConfig.js';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import React, { useState, useEffect, useRef, Component } from 'react';
@@ -8,7 +8,7 @@ import { signOut } from 'firebase/auth';
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 const usersRef = firestore.collection("users");
-
+const email = auth.currentUser.email;
 
 function Header() {
     return (
@@ -20,34 +20,33 @@ function Header() {
 
 function Details() {
 
-    const [chatVisibility, setChat] = useState(false);
-    const [logOutVisibility, setLogOut] = useState(false);
-    const [info, setInfo] = useState('');
+    const [chatVisibility, setChatVisibility] = useState(false);
+    const [logOutVisibility, setLogOutVisibility] = useState(false);
+    const [name, setName] = useState('');
 
     useEffect(
         () => {
-            chicken();
+            getName();
         }
     );
 
     const toggleChat = () => {
-        setChat((prev) => !prev)
+        setChatVisibility((prev) => !prev)
     }
     const toggleLogOut = () => {
-        setLogOut((prev) => !prev);
+        setLogOutVisibility((prev) => !prev);
     }
 
-    const chicken = async() => {
-        const email = auth.currentUser.email;
+    const getName = async() => {
         const snapshot = await usersRef.doc(email).get(); 
-        setInfo(snapshot.data().name);
+        setName(snapshot.data().name);
     }
    
 
     return (
         <div>
             <div className="rectangle1">
-                <h1 className="displayName">{info}</h1>
+                <h1 className="displayName">{name}</h1>
                 <button className = "logOut" onClick = {toggleLogOut}>logOut</button>
                 <button className = "newChat" onClick = {toggleChat}>addChat</button>
             </div>
@@ -58,9 +57,35 @@ function Details() {
 }
 
 function ChatPanel(props) {
-
+    const [newFriendEmail, setNewFriendEmail] = useState('');
+    const [errors, setErrors] = useState('');
     const togglePanel = () => {
         props.toggle();
+    }
+
+    const validateForm = async() => {
+        const snapshot = await usersRef.doc(newFriendEmail).get();
+        if (!snapshot.exists) {
+            setErrors("This user does not exist!");
+        }
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        validateForm();
+        if (!errors.isEmpty()) {
+            
+
+            //try
+            const chatID = firestore.collection('Chats').doc();
+
+            await chatID.collection('users').doc('emails').set({
+                userEmail1 : email,
+                userEmail2 : newFriendEmail
+            });
+
+            togglePanel();
+        }
     }
 
     return (
@@ -69,14 +94,14 @@ function ChatPanel(props) {
                 <button className="x" onClick={togglePanel}>x</button>
                 <h1>New Message</h1>
             </div>
-            <form>
+            <form onSubmit={handleSubmit}>
                 <div className = 'newMessage'>
-                    <div className = 'circle1'></div>
-                    <input type='email' className="newUser" value = "newFriend"/>
+                    <input type='email' className="newUser" placeholder="Email" value = {newFriendEmail} onChange/>
                 </div>
                 <div className = 'newMessageSubmit'>
-                    <button onClick = {togglePanel} >Next</button>
+                    <button type='submit'>Next</button>
                 </div>
+                <p>{errors}</p>
             </form>
         </div>
     )
