@@ -4,6 +4,8 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import React, { useState, useEffect, useRef, Component } from 'react';
 import { signOut } from 'firebase/auth';
+import { BsPlusLg } from 'react-icons/bs';
+import { BsBoxArrowRight } from 'react-icons/bs';
 
 const auth = firebase.auth();
 const firestore = firebase.firestore();
@@ -12,7 +14,7 @@ const usersRef = firestore.collection("users");
 
 function Header() {
     return (
-        <div className="header">
+        <div>
             <Details/>
         </div>
     ) 
@@ -43,13 +45,18 @@ function Details() {
         setInfo(snapshot.data().name);
     }
    
-
     return (
-        <div>
-            <div className="rectangle1">
+        <div className="d-flex flex-row header">
+            <div className="d-flex nameBox">
                 <h1 className="displayName">{info}</h1>
-                <button className = "logOut" onClick = {toggleLogOut}>logOut</button>
-                <button className = "newChat" onClick = {toggleChat}>addChat</button>
+                <button className = "logOut" onClick = {toggleLogOut}>
+                  <BsBoxArrowRight/>
+                </button>
+            </div>
+            <div className="newChatBox">
+              <button className = "newChat" onClick = {toggleChat}>
+                <BsPlusLg/>
+              </button>
             </div>
             <ChatPanel visible={chatVisibility} toggle={toggleChat}></ChatPanel>
             <LogOutPanel visible={logOutVisibility} toggle={toggleLogOut}></LogOutPanel>
