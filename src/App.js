@@ -1,14 +1,23 @@
+
+import React, { useState, useRef } from 'react';
 import './App.css';
 import Header from './screens/Header';
+<<<<<<< HEAD
+=======
+
+>>>>>>> e777afc04bc3b775dcd46c6baf83c192683acc36
 import firebase from './constants/FirebaseConfig.js';
+
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-import React, { useState, useRef } from 'react';
 import SignIn from './screens/SignIn';
+
 
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 
+
+// main App component
 function App() {
   const [user] = useAuthState(auth);
 
@@ -20,11 +29,10 @@ function App() {
 }
 
 function ChatRoom() {
-
   const dummy = useRef();
   const messagesRef = firestore.collection('messages');
   const query = messagesRef.orderBy('createdAt').limitToLast(25);
-  const [messages] = useCollectionData(query);
+  const [messages] = useCollectionData(query, {idField: 'id'});
 
   const [formValue, setFormValue] = useState('');
 
@@ -38,9 +46,8 @@ function ChatRoom() {
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       uid
     })
-
+    
     setFormValue('');
-
     dummy.current.scrollIntoView({ behavior: 'smooth' });
   }
 
@@ -67,6 +74,7 @@ function ChatMessage(props) {
   const {text, uid} = props.message;
 
   const messageClass = uid === auth.currentUser.uid ? 'sent' : 'received';
+
   return(
     <div className={'message ' + messageClass}>
       <p>{text}</p>

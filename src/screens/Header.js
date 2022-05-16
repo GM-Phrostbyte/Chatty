@@ -60,8 +60,6 @@ function Details() {
 function ChatPanel(props) {
     const [newFriendEmail, setNewFriendEmail] = useState('');
     const [errors, setErrors] = useState('');
-
-
     const togglePanel = () => {
         props.toggle();
     }
@@ -78,6 +76,7 @@ function ChatPanel(props) {
         console.log(e.target.value);
         console.log(newFriendEmail);
     }
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();

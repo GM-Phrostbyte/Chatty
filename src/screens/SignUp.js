@@ -1,3 +1,4 @@
+import './Sign.css';
 import React, { useState, useEffect } from 'react';
 import firebase from '../constants/FirebaseConfig.js';
 import './SignUp.css';
@@ -5,15 +6,13 @@ import './SignUp.css';
 const firestore = firebase.firestore();
 
 function SignUp(props) {
-
   const usersRef = firestore.collection('users');
-
   const [signupInfo, setSignupInfo] = useState({fullName: '', email: '', password: '', confirmPwd: ''});
   const [formErrors, setFormErrors] = useState({});
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
   const signUpWithEmail = async() => {
-    const { email, password } = signupInfo;
+  const { email, password } = signupInfo;
     let user = null;
 
     try {
@@ -22,19 +21,12 @@ function SignUp(props) {
         alert(error.message);
         return;
     }
-
     
     console.log(user) // a lot of information 
 
     await usersRef.doc(signupInfo.email).set({
       name: signupInfo.fullName,
     });
-
-  }
-  
-  const signInWithGoogle = () => {
-    const provider = new firebase.auth.GoogleAuthProvider();
-    props.auth.signInWithPopup(provider);
   }
 
   const handleFormChange = (e) => {
@@ -82,7 +74,7 @@ function SignUp(props) {
   }
 
   return (
-    <>
+    <div className="Sign">
       <h2>Sign Up</h2>
       <form onSubmit={handleSubmit}>
         <div style={{marginTop: "-100%"}}>
@@ -115,20 +107,18 @@ function SignUp(props) {
               placeholder="Confirm Password"
               onChange={handleFormChange} /><br/>
           {formErrors.confirmPwd && <p>{formErrors.confirmPwd}</p>}
-          <div>
-            {formErrors.pwdMismatch && <p>{formErrors.pwdMismatch}</p>}
-          </div>
-          <button type='submit'>Sign Up</button>
+          {formErrors.pwdMismatch && <p>{formErrors.pwdMismatch}</p>}
+          <button type='submit' className='login'>Sign Up</button>
         </div>
       </form>
 
-      <button onClick={signInWithGoogle}>Connect with Google</button>
+      <button onClick={props.google}>Connect with Google</button>
       <h4>Already have an account?
-        <button onClick={props.switch}>Sign In</button>
+        <button onClick={props.switch} className="signup">Sign In</button>
       </h4>
-    </>
+      
+    </div>
     );
   }
-
 
   export default SignUp;
