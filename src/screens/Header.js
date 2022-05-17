@@ -29,8 +29,8 @@ function Header() {
     }
 
     const getName = async() => {
-        const email2 = auth.currentUser.email;
-        const snapshot = await usersRef.doc(email2).get(); 
+        const email = auth.currentUser.email;
+        const snapshot = await usersRef.doc(email).get(); 
         setName(snapshot.data().name);
     }
    
@@ -50,38 +50,87 @@ function Header() {
 
 function ChatPanel(props) {
     const [newFriendEmail, setNewFriendEmail] = useState('');
+    const [myName, setMyName] = useState('');
+    const [newFriendName, setNewFriendName] = useState('');
     const [errors, setErrors] = useState('');
+
     const togglePanel = () => {
+        resetForm();
         props.toggle();
-        setErrors('');
+    }
+
+    const resetForm = () => {
+        setNewFriendEmail('');
+        setMyName('');
+        setNewFriendName('');
     }
 
     const validateForm = async() => {
+
+        const myEmail = auth.currentUser.email;
         const snapshot = await usersRef.doc(newFriendEmail).get();
+        const ref = usersRef.doc(myEmail).collection('chats');
+        const snapshot2 = await ref.where('email', '==', newFriendEmail).get();
+
         if (!snapshot.exists) {
             setErrors("This user does not exist!");
+        } else if (!snapshot2.empty) {
+            setErrors("You've already messaged this user!");
+        } else {
+            //setErrors('');
         }
+        console.log("1. " + errors);
     }
 
     const handleInputChange = (e) => {
         setNewFriendEmail(e.target.value);
     }
 
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-        validateForm();
+        await validateForm();
+
+        console.log("2. " + errors);
+
         if (!errors) {
            //try
-            const email = auth.currentUser.email;
-            const chatID = firestore.collection('Chats').doc();
+            const myEmail = auth.currentUser.email;
+            const chatID = firestore.collection('chats').doc();
+            const snapshot = await usersRef.doc(myEmail).get(); 
+            setMyName(snapshot.data().name);
+            const snapshot2 = await usersRef.doc(newFriendEmail).get();
+            setNewFriendName(snapshot2.data().name);
+
+            console.log(errors);
 
             await chatID.collection('users').doc('emails').set({
-                userEmail1 : email,
+                userEmail1 : myEmail,
                 userEmail2 : newFriendEmail
             });
 
-            togglePanel();
+            await usersRef.doc(myEmail).collection('chats').doc(chatID.id).set({
+                isRead: false,
+                lastMessage: '',
+                time: '',
+                name: newFriendName,
+                email: newFriendEmail 
+            });
+
+            await usersRef.doc(newFriendEmail).collection('chats').doc(chatID.id).set({
+                isRead: false,
+                lastMessage: '',
+                time: '',
+                name: myName, 
+                email: myEmail
+            });
+
+            console.log("beforeerros");
+
+            setErrors('');
+            console.log("aftereerros");
+
+            togglePanel(); 
+            console.log("afterpaneltoggle");
         }
     }
 
