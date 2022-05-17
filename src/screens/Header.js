@@ -8,17 +8,8 @@ import { signOut } from 'firebase/auth';
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 const usersRef = firestore.collection("users");
-const email = auth.currentUser.email;
 
 function Header() {
-    return (
-        <div className="header">
-            <Details/>
-        </div>
-    ) 
-}
-
-function Details() {
 
     const [chatVisibility, setChatVisibility] = useState(false);
     const [logOutVisibility, setLogOutVisibility] = useState(false);
@@ -62,6 +53,7 @@ function ChatPanel(props) {
     const [errors, setErrors] = useState('');
     const togglePanel = () => {
         props.toggle();
+        setErrors('');
     }
 
     const validateForm = async() => {
@@ -73,18 +65,15 @@ function ChatPanel(props) {
 
     const handleInputChange = (e) => {
         setNewFriendEmail(e.target.value);
-        console.log(e.target.value);
-        console.log(newFriendEmail);
     }
 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         validateForm();
-        if (!errors.isEmpty()) {
-            
-
-            //try
+        if (!errors) {
+           //try
+            const email = auth.currentUser.email;
             const chatID = firestore.collection('Chats').doc();
 
             await chatID.collection('users').doc('emails').set({

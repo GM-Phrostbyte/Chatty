@@ -1,7 +1,6 @@
 import './Sign.css';
 import React, { useState, useEffect } from 'react';
 import firebase from '../constants/FirebaseConfig.js';
-import './SignUp.css';
 
 const firestore = firebase.firestore();
 
