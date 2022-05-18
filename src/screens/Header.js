@@ -60,6 +60,7 @@ function ChatPanel(props) {
     }
 
     const resetForm = () => {
+        setErrors('');
         setNewFriendEmail('');
         setMyName('');
         setNewFriendName('');
@@ -126,7 +127,7 @@ function ChatPanel(props) {
 
             console.log("beforeerros");
 
-            setErrors('');
+            //setErrors('');
             console.log("aftereerros");
 
             togglePanel(); 
