@@ -36,11 +36,11 @@ function Header() {
    
 
     return (
-        <div>
-            <div className="rectangle1">
-                <h1 className="displayName">{name}</h1>
-                <button className = "logOut" onClick = {toggleLogOut}>logOut</button>
-                <button className = "newChat" onClick = {toggleChat}>addChat</button>
+        <div className='container bg-secondary'>
+            <div className="rectangle1 container-sm d-flex justify-content-center align-items-center">
+                <h1 className="displayName h1">{name}</h1>
+                <button className = "logOut btn btn-primary" onClick = {toggleLogOut}>logOut</button>
+                <button className = "newChat btn btn-primary" onClick = {toggleChat}>addChat</button>
             </div>
             <ChatPanel visible={chatVisibility} toggle={toggleChat}></ChatPanel>
             <LogOutPanel visible={logOutVisibility} toggle={toggleLogOut}></LogOutPanel>
@@ -150,23 +150,23 @@ function ChatPanel(props) {
     }
 
     return (
-        <div className = 'chatPanel' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
+        <div className = 'chatPanel container' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
             <div>
-                <button className="x" onClick={togglePanel}>x</button>
+                <button className=" btn btn-outline-primary x" onClick={togglePanel}>x</button>
                 <h1>New Message</h1>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} className="form-actions">
                 <div className = 'newMessage'>
                     <input 
                         type='email' 
-                        className="newUser" 
+                        className="newUser form-control" 
                         placeholder="Email" 
                         value = {newFriendEmail} 
                         onChange = {handleInputChange}
                     />
                 </div>
-                <div className = 'newMessageSubmit'>
-                    <button type='submit'>Next</button>
+                <div className = 'newMessageSubmit container'>
+                    <button type='submit' className='btn btn-primary'>Next</button>
                 </div>
                 <p>{errors}</p>
             </form>
@@ -181,16 +181,16 @@ function LogOutPanel(props) {
     }
 
     return (
-        <div className = 'logOutPanel' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
-            <div className = "logOutHeader">
+        <div className = 'logOutPanel container' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
+            <div className = "logOutHeader container">
                 <h1>Are you sure?</h1>
             </div>
-            <form>
+            <form className='form-actions'>
                 <div className= 'theFunniShape'>
-                    <button className='signOut' onClick = {() => auth.signOut()}>SIGN OUT</button>
+                    <button className='signOut btn btn-primary' onClick = {() => auth.signOut()}>SIGN OUT</button>
                 </div>
                 <div className= 'theFunniShape'>
-                    <button className='return' onClick = {togglePanel}>RETURN</button>
+                    <button className='return btn btn-primary' onClick = {togglePanel}>RETURN</button>
                 </div>
             </form>
         </div>

@@ -43,6 +43,11 @@ $auth-input-background: #EEEEEE;
     }
 }
 
+.App {
+    background-color: $secondary;
+    height: 100vh;
+}
+
 .card {
   width: $auth-card-width;
   margin-right: auto;
