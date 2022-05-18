@@ -1,7 +1,6 @@
+
 import React, { useState, useRef } from 'react';
-// import './App.css';
-import Header from './Header.js';
-import './Header.css';
+import Header from './screens/Header';
 import firebase from './constants/FirebaseConfig.js';
 
 import { useAuthState } from 'react-firebase-hooks/auth';
