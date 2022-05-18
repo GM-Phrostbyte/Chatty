@@ -1,6 +1,5 @@
 
 import React, { useState, useRef } from 'react';
-import './App.css';
 import Header from './screens/Header';
 import firebase from './constants/FirebaseConfig.js';
 
