@@ -1,4 +1,5 @@
 // Override default variables before the import
+
 $auth-card-width: 30rem;
 $auth-card-height: 30rem;
 $primary: #a168db;
@@ -14,6 +15,7 @@ $gradient: linear-gradient(
 
 // buttons
 $button-border-radius: 45px;
+$circle-button-size: 50px;
 
 // auth pages
 $auth-header-color: white;
@@ -39,6 +41,7 @@ $auth-input-background: #eeeeee;
 
 // Import Bootstrap and its default variables
 @import "~bootstrap/scss/bootstrap.scss";
+
 .btn {
   border-radius: $button-border-radius;
 
@@ -137,9 +140,9 @@ $auth-input-background: #eeeeee;
 }
 
 .form-actions {
-  margin: 0;
-  background-color: transparent;
-  text-align: center;
+    margin: 0;
+    background-color: transparent;
+    text-align: center;
 }
 
 // fun div thingy
@@ -169,3 +172,47 @@ $auth-input-background: #eeeeee;
     top: 2rem;
   }
 }
+
+// header page
+
+@mixin circleButton {
+  width: $circle-button-size;
+  height: $circle-button-size;
+  border-radius: 50%;
+  border: none;
+}
+
+.header {
+  //background-color: red;
+  width: 500px; //will be changed ^ 33%?
+  padding-top: 3rem;
+
+  .nameBox {
+    background-color: $primary;
+    padding: 1rem;
+    border-top-right-radius: $circle-button-size;
+    border-bottom-right-radius: $circle-button-size;
+    margin-right: 1rem;
+
+    .displayName {
+      color: white;
+      font-size: 1.5rem;
+      text-align: left;
+      padding-left: 1rem;
+      font-weight: 300;
+    }
+    .logOut {
+      @include circleButton();
+      background-color: $secondary;
+      color: $primary;
+      font-size: 1.5rem;
+    }
+  }
+  .newChat {
+    @include circleButton();
+    background-color: $primary;
+    color: $secondary;
+  }
+}
+
+
