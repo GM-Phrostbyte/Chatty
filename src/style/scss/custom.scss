@@ -1,0 +1,122 @@
+// Override default variables before the import
+$auth-card-width: 30rem;
+$auth-card-height: 40rem;
+$primary: #A168DB;
+$secondary: #F6F6F6;
+$body-color: #656565;
+$full-height: 100vh;
+$gradient: linear-gradient(127.13deg, rgba(81, 145, 240, 0.2) 9.04%, rgba(81, 145, 240, 0) 71.54%), linear-gradient(0deg, #905FC1, #905FC1);
+
+// buttons
+$button-border-radius: 45px;
+
+
+// auth pages
+$auth-header-color: white;
+$auth-card-header-height: 7rem;
+$auth-card-header-top-padding: 3rem;
+$auth-small-text-color: #919191;
+$auth-google-text-color: $body-color;
+$auth-border-radius: 36px;
+$auth-button-padding: 10rem;
+$auth-button-google-padding: 6.95rem;
+$auth-input-background: #EEEEEE;
+
+// $theme-colors: (
+//   "primary":    $primary,
+//   "secondary":  $secondary,
+//   "success":    $success,
+//   "info":       $info,
+//   "warning":    $warning,
+//   "danger":     $danger,
+//   "light":      $light,
+//   "dark":       $dark
+// );
+
+// Import Bootstrap and its default variables
+@import "~bootstrap/scss/bootstrap.scss";
+.btn {
+    border-radius: $button-border-radius;
+
+    &-primary {
+        color: white;
+    }
+}
+
+.App {
+    background-color: $secondary;
+    height: 100vh;
+}
+
+.card {
+  width: $auth-card-width;
+  margin-right: auto;
+  margin-left: auto;
+  padding-bottom: 3rem;
+  // height: $auth-card-height;
+  border: 0px;
+  border-radius: $auth-border-radius;
+    .h2 {
+        color: $auth-header-color;
+        margin: 0;
+    }
+
+    &-header {
+        background-color: $primary;
+        margin-top: -1vh;
+        height: $auth-card-header-height;
+        text-align: center;
+        padding-top: $auth-card-header-top-padding;
+
+        &:first-child {
+            border-top-right-radius: $auth-border-radius;
+            border-top-left-radius: $auth-border-radius;
+        }
+    }
+    .btn {
+        padding-left: $auth-button-padding;
+        padding-right: $auth-button-padding;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+
+    }
+
+    .btn-link {
+        font-weight: 600;
+        text-decoration: none;
+        padding-left: 0.5rem;
+        padding-right: 0px;
+    }
+
+    .google {
+        padding-left: $auth-button-google-padding;
+        padding-right: $auth-button-google-padding;
+    }
+
+    .form-control {
+        &:first-child {
+            margin-top: 2.5rem;
+        }
+        padding: 0.8rem;
+        padding-left: 1.5rem;
+        border-radius: $button-border-radius;
+        background-color: $auth-input-background;
+        border-width: 0;
+    }
+}
+
+.auth-container {
+    height: $full-height;
+    justify-content: center;
+}
+
+.App {
+    height: $full-height;
+    margin: 0;
+}
+
+.form-actions {
+    margin: 0;
+    background-color: transparent;
+    text-align: center;
+}
