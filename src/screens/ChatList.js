@@ -15,7 +15,7 @@ function ChatContact(props) {
   );
 }
 
-function ChatPanel(props) {
+function ChatList(props) {
   const [chatList, setChatList] = useState([]);
 
   useEffect(() => {
@@ -33,10 +33,10 @@ function ChatPanel(props) {
   }
 
   return (
-    <div className="ChatPanel">
+    <div className="ChatList">
       <main>{chatList.map(contact => <ChatContact key={contact.email} details={contact}/> )}</main>
     </div> 
   );
 }
 
-export default ChatPanel;
+export default ChatList;

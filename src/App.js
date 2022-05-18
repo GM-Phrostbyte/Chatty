@@ -6,7 +6,7 @@ import firebase from './constants/FirebaseConfig.js';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import SignIn from './screens/SignIn';
-import ChatPanel from './screens/ChatPanel';
+import ChatList from './screens/ChatList';
 
 
 const auth = firebase.auth();
@@ -19,7 +19,7 @@ function App() {
 
   return (
     <div className="App">
-      {user ? <ChatPanel /> : <SignIn auth={auth}/>}
+      {user ? <Header /> : <SignIn auth={auth}/>}
     </div>
   );
 }

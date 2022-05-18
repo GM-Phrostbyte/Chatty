@@ -2,8 +2,10 @@
 import React, { useState, useEffect } from "react";
 import firebase from "../constants/FirebaseConfig.js";
 import SignUp from "./SignUp";
+import { TransparentDiv } from "../assets/TransparentDiv.js";
 
 const firestore = firebase.firestore();
+export const googleIcon = require("../assets/googleIcon.png");
 
 function SignIn(props) {
   const usersRef = firestore.collection("users");
@@ -75,6 +77,11 @@ function SignIn(props) {
   };
 
   return (
+    <>
+    <TransparentDiv />
+    <TransparentDiv />
+    <TransparentDiv/>
+    
     <div className="d-flex justify-content-center auth-container bg-primary bg-gradient align-items-center">
       {active ? (
         <div className="container-md">
@@ -117,6 +124,7 @@ function SignIn(props) {
                   className="btn btn-outline-primary google"
                   onClick={signInWithGoogle}
                 >
+                  <img src={googleIcon} alt="GoogleIcon" />
                   Connect With Google
                 </button>
                 <div>
@@ -137,6 +145,7 @@ function SignIn(props) {
         />
       )}
     </div>
+    </>
   );
 }
 

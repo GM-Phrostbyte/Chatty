@@ -4,6 +4,11 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import React, { useState, useEffect, useRef, Component } from 'react';
 import { signOut } from 'firebase/auth';
+import ChatList from './ChatList'
+
+// icons
+import { BsPlusLg } from 'react-icons/bs';
+import { BsBoxArrowRight } from 'react-icons/bs';
 
 const auth = firebase.auth();
 const firestore = firebase.firestore();
@@ -35,13 +40,20 @@ function Header() {
 
     return (
         <div className='container bg-secondary'>
-            <div className="rectangle1 container-sm d-flex justify-content-center align-items-center">
-                <h1 className="displayName h1">{name}</h1>
-                <button className = "logOut btn btn-primary" onClick = {toggleLogOut}>logOut</button>
-                <button className = "newChat btn btn-primary" onClick = {toggleChat}>addChat</button>
+            <div className="header container-sm d-flex justify-content-start align-items-center">
+                <div className="nameBox flex-grow-1 d-flex align-items-center">
+                  <h1 className="displayName flex-grow-1">{name}</h1>   
+                  <button className = "logOut btn btn-primary d-flex align-items-center justify-content-center" onClick = {toggleLogOut}>
+                    <BsBoxArrowRight/>
+                  </button>
+                </div>
+                <button className = "newChat btn btn-primary d-flex align-items-center justify-content-center" onClick = {toggleChat}>
+                  <BsPlusLg/>
+                </button>
             </div>
             <ChatPanel visible={chatVisibility} toggle={toggleChat}></ChatPanel>
             <LogOutPanel visible={logOutVisibility} toggle={toggleLogOut}></LogOutPanel>
+            <ChatList />
         </div>
     )
 }
