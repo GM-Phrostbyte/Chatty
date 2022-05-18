@@ -105,7 +105,7 @@ function SignIn(props) {
                   <br />
                   {formErrors.password && <p>{formErrors.password}</p>}
                   <br />
-                  <button type="submit" class="btn btn-primary">
+                  <button type="submit" className="btn btn-primary">
                     LOG IN
                   </button>
                 </div>
@@ -114,14 +114,14 @@ function SignIn(props) {
 
               <div className="container d-flex align-items-center flex-column justify-content-center">
                 <button
-                  class="btn btn-outline-primary google"
+                  className="btn btn-outline-primary google"
                   onClick={signInWithGoogle}
                 >
                   Connect With Google
                 </button>
                 <div>
                   <small>Don't have an account?</small>
-                  <button class="btn btn-link" onClick={switchPage}>
+                  <button className="btn btn-link" onClick={switchPage}>
                     Sign Up
                   </button>
                 </div>

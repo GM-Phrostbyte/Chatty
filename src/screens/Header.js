@@ -15,11 +15,9 @@ function Header() {
     const [logOutVisibility, setLogOutVisibility] = useState(false);
     const [name, setName] = useState('');
 
-    useEffect(
-        () => {
-            getName();
-        }
-    );
+    useEffect(() => {
+        getName();
+    }, []);
 
     const toggleChat = () => {
         setChatVisibility((prev) => !prev)
