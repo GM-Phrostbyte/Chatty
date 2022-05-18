@@ -78,13 +78,13 @@ function SignIn(props) {
     <div className="d-flex justify-content-center auth-container bg-primary bg-gradient align-items-center">
       {active ? (
         <div className="container-md">
-          <div className="auth card d-flex">
+          <div className="auth card d-flex shadow-lg">
             <div className="card-header">
               <h2 className="h2">Log In</h2>
             </div>
             <div className="card-body">
               <form onSubmit={handleSubmit} className="form-actions">
-                <div className="fields">
+                <div className="fields mx-4">
                   <input
                     className="form-control"
                     name="email"
@@ -104,25 +104,27 @@ function SignIn(props) {
                   />
                   <br />
                   {formErrors.password && <p>{formErrors.password}</p>}
-                  <br/>
+                  <br />
                   <button type="submit" class="btn btn-primary">
-                    Log In
+                    LOG IN
                   </button>
                 </div>
               </form>
-              <br/>
+              <br />
 
               <div className="container d-flex align-items-center flex-column justify-content-center">
-                <button class="btn btn-outline-primary google" onClick={signInWithGoogle}>
-                      Connect With Google
+                <button
+                  class="btn btn-outline-primary google"
+                  onClick={signInWithGoogle}
+                >
+                  Connect With Google
+                </button>
+                <div>
+                  <small>Don't have an account?</small>
+                  <button class="btn btn-link" onClick={switchPage}>
+                    Sign Up
                   </button>
-                  <div>
-                    <small>Don't have an account?</small>
-                      <button class="btn btn-link" onClick={switchPage}>
-                        Sign Up
-                      </button>
-                  </div>
-
+                </div>
               </div>
             </div>
           </div>

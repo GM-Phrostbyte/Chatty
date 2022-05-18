@@ -13,10 +13,13 @@ $button-border-radius: 45px;
 
 // auth pages
 $auth-header-color: white;
+$auth-card-header-height: 7rem;
+$auth-card-header-top-padding: 3rem;
 $auth-small-text-color: #919191;
 $auth-google-text-color: $body-color;
 $auth-border-radius: 36px;
-$auth-button-padding: 7rem;
+$auth-button-padding: 10rem;
+$auth-button-google-padding: 6.95rem;
 $auth-input-background: #EEEEEE;
 
 // $theme-colors: (
@@ -34,12 +37,17 @@ $auth-input-background: #EEEEEE;
 @import "~bootstrap/scss/bootstrap.scss";
 .btn {
     border-radius: $button-border-radius;
+
+    &-primary {
+        color: white;
+    }
 }
 
 .card {
   width: $auth-card-width;
   margin-right: auto;
   margin-left: auto;
+  padding-bottom: 3rem;
   // height: $auth-card-height;
   border: 0px;
   border-radius: $auth-border-radius;
@@ -51,6 +59,9 @@ $auth-input-background: #EEEEEE;
     &-header {
         background-color: $primary;
         margin-top: -1vh;
+        height: $auth-card-header-height;
+        text-align: center;
+        padding-top: $auth-card-header-top-padding;
 
         &:first-child {
             border-top-right-radius: $auth-border-radius;
@@ -60,33 +71,38 @@ $auth-input-background: #EEEEEE;
     .btn {
         padding-left: $auth-button-padding;
         padding-right: $auth-button-padding;
+        padding-top: 1rem;
+        padding-bottom: 1rem;
+
     }
 
     .btn-link {
         font-weight: 600;
         text-decoration: none;
-        padding-left: 1rem;
+        padding-left: 0.5rem;
         padding-right: 0px;
     }
 
     .google {
-        padding-left: 4rem;
-        padding-right: 4rem;
+        padding-left: $auth-button-google-padding;
+        padding-right: $auth-button-google-padding;
     }
 
     .form-control {
-        margin-top: 1rem;
-        padding: 1rem;
+        &:first-child {
+            margin-top: 2.5rem;
+        }
+        padding: 0.8rem;
+        padding-left: 1.5rem;
         border-radius: $button-border-radius;
         background-color: $auth-input-background;
+        border-width: 0;
     }
 }
 
 .auth-container {
     height: $full-height;
     justify-content: center;
-
-
 }
 
 .App {
