@@ -1,4 +1,3 @@
-import './Header.css'
 import firebase from '../constants/FirebaseConfig.js';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
@@ -178,9 +177,9 @@ function LogOutPanel(props) {
     }
 
     return (
-        <div className = 'logOutPanel container' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
-            <div className = "logOutHeader container">
-                <h1>Are you sure?</h1>
+        <div className = 'logOutPanel container d-flex justify-content-center align-items-center flex-column' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
+            <div className = "logOutHeader container d-flex justify-content-center align-items-center">
+                <p className="modalHeaderText">Are you sure?</p>
             </div>
             <form className='form-actions'>
                 <div className= 'theFunniShape'>

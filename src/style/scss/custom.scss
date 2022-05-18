@@ -28,6 +28,9 @@ $auth-button-padding: 10rem;
 $auth-button-google-padding: 6.5rem;
 $auth-input-background: #eeeeee;
 
+// header page
+$modal-border-radius: 36px;
+
 // $theme-colors: (
 //   "primary":    $primary,
 //   "secondary":  $secondary,
@@ -216,3 +219,26 @@ $auth-input-background: #eeeeee;
 }
 
 
+// logout modal
+
+.logOutPanel {
+  background-color: $secondary;
+  width: 500px; // to change
+  border-radius: $modal-border-radius;
+  box-shadow: 0px 4px 53px 0px #00000026;
+  padding: 0px;
+  padding-bottom: 2rem;
+
+  .logOutHeader {
+    border-top-left-radius: $modal-border-radius;
+    border-top-right-radius: $modal-border-radius;
+    background-color: $primary;
+
+    .modalHeaderText {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      padding: 2rem;
+    }
+  }
+}
