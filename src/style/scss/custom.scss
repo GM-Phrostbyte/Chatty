@@ -9,7 +9,7 @@ $gradient: linear-gradient(127.13deg, rgba(81, 145, 240, 0.2) 9.04%, rgba(81, 14
 
 // buttons
 $button-border-radius: 45px;
-
+$circle-button-size: 50px;
 
 // auth pages
 $auth-header-color: white;
@@ -35,6 +35,7 @@ $auth-input-background: #EEEEEE;
 
 // Import Bootstrap and its default variables
 @import "~bootstrap/scss/bootstrap.scss";
+
 .btn {
     border-radius: $button-border-radius;
 
@@ -119,4 +120,48 @@ $auth-input-background: #EEEEEE;
     margin: 0;
     background-color: transparent;
     text-align: center;
+}
+
+
+// header page
+
+@mixin circleButton {
+  width: $circle-button-size;
+  height: $circle-button-size;
+  border-radius: 50%;
+  border: none;
+}
+
+.header {
+  //background-color: red;
+  width: 33%;
+  padding-top: 3rem;
+
+  .nameBox {
+    background-color: $primary;
+    padding: 1rem;
+    border-top-right-radius: $circle-button-size;
+    border-bottom-right-radius: $circle-button-size;
+    margin-right: 1rem;
+
+    .displayName {
+      color: white;
+      font-size: 1.5rem;
+      text-align: left;
+      padding-left: 1rem;
+      font-weight: 300;
+    }
+    .logOut {
+      @include circleButton();
+      background-color: $secondary;
+      color: $primary;
+      font-size: 1.5rem;
+    }
+  }
+  .newChat {
+    @include circleButton();
+    background-color: $primary;
+    color: $secondary;
+  }
+  
 }
