@@ -1,3 +1,4 @@
+
 // Override default variables before the import
 $auth-card-width: 30rem;
 $auth-card-height: 30rem;
@@ -72,7 +73,7 @@ $error-size: .9rem;
   border-radius: $modal-border-radius;
   box-shadow: 0px 4px 53px 0px #00000026;
   padding: 0px;
-  padding-bottom: 3rem;
+  padding-bottom: 2rem;
 }
 
 @mixin modalButton($theme) {
@@ -267,10 +268,10 @@ $error-size: .9rem;
 
 // modals
 .modalHeader {
-  border-top-left-radius: $modal-border-radius;
-  border-top-right-radius: $modal-border-radius;
+  border-top-left-radius: calc($modal-border-radius - 1px);
+  border-top-right-radius: calc($modal-border-radius - 1px);
   background-color: $primary;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1rem;
   border-bottom-left-radius: 40%;
   border-bottom-right-radius: 40%;
 
@@ -282,7 +283,7 @@ $error-size: .9rem;
     color: white;
     font-size: 1.2rem;
     font-weight: 600;
-    padding-top: 2rem;
+    padding-top: 1rem;
     padding-bottom: 1rem;
   }
 }
