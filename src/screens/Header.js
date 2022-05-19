@@ -142,10 +142,10 @@ function ChatPanel(props) {
     }
 
     return (
-        <div className = 'chatPanel container' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
-            <div>
-                <button className=" btn btn-outline-primary x" onClick={togglePanel}>x</button>
-                <h1>New Message</h1>
+        <div className = 'chatPanel container d-flex justify-content-center align-items-center flex-column' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
+            <div className = 'modalHeader container d-flex justify-content-center align-items-center'>
+                <button className="btn btn-outline-primary x" onClick={togglePanel}>x</button>
+                <p className = "modalHeaderText">New Message</p>
             </div>
             <form onSubmit={handleSubmit} className="form-actions">
                 <div className = 'newMessage'>
@@ -156,11 +156,11 @@ function ChatPanel(props) {
                         value = {newFriendEmail} 
                         onChange = {handleInputChange}
                     />
+                    <p className="errors">{errors}</p>
                 </div>
                 <div className = 'newMessageSubmit container'>
-                    <button type='submit' className='btn btn-primary'>Next</button>
+                    <button type='submit' className='next btn btn-primary'>NEXT</button>
                 </div>
-                <p>{errors}</p>
             </form>
         </div>
     )
@@ -175,14 +175,14 @@ function LogOutPanel(props) {
 
     return (
         <div className = 'logOutPanel container d-flex justify-content-center align-items-center flex-column' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
-            <div className = "logOutHeader container d-flex justify-content-center align-items-center">
-                <p className="modalHeaderText">Are you sure?</p>
+            <div className = "modalHeader container d-flex justify-content-center align-items-center">
+                <p className = "modalHeaderText">Are you sure?</p>
             </div>
-            <form className='form-actions d-flex'>
-                <div className= 'theFunniShape'>
-                    <button className='signOut btn btn-primary' onClick = {() => auth.signOut()}>SIGN OUT</button>
+            <form className ='form-actions d-flex'>
+                <div className = 'theFunniShape'>
+                    <button className ='signOut btn btn-primary' onClick = {() => auth.signOut()}>SIGN OUT</button>
                 </div>
-                <div className= 'theFunniShape'>
+                <div className = 'theFunniShape'>
                     <button className='return btn btn-primary' onClick = {togglePanel}>RETURN</button>
                 </div>
             </form>
