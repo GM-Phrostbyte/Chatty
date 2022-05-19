@@ -36,7 +36,6 @@ function Header() {
         setName(snapshot.data().name);
     }
    
-
     return (
         <div className='container bg-secondary'>
             <div className="header container-sm d-flex justify-content-start align-items-center">
@@ -59,8 +58,6 @@ function Header() {
 
 function ChatPanel(props) {
     const [newFriendEmail, setNewFriendEmail] = useState('');
-    const [myName, setMyName] = useState('');
-    const [newFriendName, setNewFriendName] = useState('');
     const [errors, setErrors] = useState('');
 
     const togglePanel = () => {
@@ -70,8 +67,6 @@ function ChatPanel(props) {
 
     const resetForm = () => {
         setNewFriendEmail('');
-        setMyName('');
-        setNewFriendName('');
         setErrors('');
     }
 
@@ -99,14 +94,16 @@ function ChatPanel(props) {
         setNewFriendEmail(e.target.value);
     }
 
-
     const addData = async () => {
         const myEmail = auth.currentUser.email;
         const chatID = firestore.collection('chats').doc();
         const snapshot = await usersRef.doc(myEmail).get(); 
-        setMyName(snapshot.data().name);
         const snapshot2 = await usersRef.doc(newFriendEmail).get();
-        setNewFriendName(snapshot2.data().name);
+
+        const myName = snapshot.data().name;
+        const newFriendName = snapshot2.data().name;
+       // const time = firebase.firestore.FieldValue.serverTimestamp();
+     
 
         console.log(errors);
 
@@ -118,7 +115,7 @@ function ChatPanel(props) {
         await usersRef.doc(myEmail).collection('chats').doc(chatID.id).set({
             isRead: false,
             lastMessage: '',
-            time: '',
+            time: 'time',
             name: newFriendName,
             email: newFriendEmail 
         });
@@ -126,7 +123,7 @@ function ChatPanel(props) {
         await usersRef.doc(newFriendEmail).collection('chats').doc(chatID.id).set({
             isRead: false,
             lastMessage: '',
-            time: '',
+            time: 'time',
             name: myName, 
             email: myEmail
         });
@@ -135,7 +132,6 @@ function ChatPanel(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const errorsRet = await validateForm();
-
 
         // basically checking if there is an error or not
         if (!errorsRet) {

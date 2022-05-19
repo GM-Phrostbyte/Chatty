@@ -9,8 +9,12 @@ function ChatContact(props) {
   const details = props.details;
   return (
       <div className='contact'>
-        <p>{details.name}</p>
-        <p>{details.lastMessage}</p>
+        <button>
+          <p>{details.name}</p>
+          <p>{details.lastMessage}</p>
+          <p>{details.isRead}</p>
+          <p>{details.time}</p>
+        </button>
       </div>
   );
 }
@@ -20,11 +24,11 @@ function ChatList(props) {
 
   useEffect(() => {
     getChats();
-  }, []);
+  }); // no dependencies may be reason I fried the db
 
   const getChats = async() => {
       const email = auth.currentUser.email;
-      const usersChatsRef = usersRef.doc('gm.alexc03@gmail.com').collection('chats');
+      const usersChatsRef = usersRef.doc(email).collection('chats');
       const snapshot = await usersChatsRef.orderBy('time', 'desc').get();
 
       let contacts = [];
