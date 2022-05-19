@@ -172,7 +172,8 @@ function ChatPanel(props) {
 
 function LogOutPanel(props) {
 
-    const togglePanel = () => {
+    const togglePanel = (e) => {
+        e.preventDefault();
         props.toggle();
     }
 
@@ -181,7 +182,7 @@ function LogOutPanel(props) {
             <div className = "logOutHeader container d-flex justify-content-center align-items-center">
                 <p className="modalHeaderText">Are you sure?</p>
             </div>
-            <form className='form-actions'>
+            <form className='form-actions d-flex'>
                 <div className= 'theFunniShape'>
                     <button className='signOut btn btn-primary' onClick = {() => auth.signOut()}>SIGN OUT</button>
                 </div>
