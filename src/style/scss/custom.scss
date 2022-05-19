@@ -16,6 +16,10 @@ $gradient: linear-gradient(
 // buttons
 $button-border-radius: 45px;
 $circle-button-size: 50px;
+$gray-button-bg: #D9D9D9;
+$gray-button-text: #8B8B8B;
+$gray-button-hover: #D0CFCF;
+$primary-button-hover: #915DC6;
 
 // auth pages
 $auth-header-color: white;
@@ -27,6 +31,9 @@ $auth-border-radius: 36px;
 $auth-button-padding: 10rem;
 $auth-button-google-padding: 6.5rem;
 $auth-input-background: #eeeeee;
+
+// header page
+$modal-border-radius: 36px;
 
 // $theme-colors: (
 //   "primary":    $primary,
@@ -181,6 +188,9 @@ $auth-input-background: #eeeeee;
   border-radius: 50%;
   border: none;
 }
+@mixin modalButton {
+  padding: 0.8rem 2.5rem;
+}
 
 .header {
   //background-color: red;
@@ -216,3 +226,60 @@ $auth-input-background: #eeeeee;
 }
 
 
+// logout modal
+
+.logOutPanel {
+  background-color: $secondary;
+  width: 400px; // to change
+  border-radius: $modal-border-radius;
+  box-shadow: 0px 4px 53px 0px #00000026;
+  padding: 0px;
+  padding-bottom: 3rem;
+
+  .logOutHeader {
+    border-top-left-radius: $modal-border-radius;
+    border-top-right-radius: $modal-border-radius;
+    background-color: $primary;
+    margin-bottom: 2rem;
+    border-bottom-left-radius: 40%;
+    border-bottom-right-radius: 40%;
+
+    .modalHeaderText {
+      color: white;
+      font-size: 1.2rem;
+      font-weight: 600;
+      padding-top: 2rem;
+      padding-bottom: 1rem;
+    }
+  }
+
+  .form-actions {
+    
+    
+    .signOut {
+      @include modalButton;
+      margin-right: 2rem;
+  
+      &:hover {
+        color: white;
+        background-color: $primary-button-hover;
+      }
+    }
+  
+    .return {
+      @include modalButton;
+      background-color: $gray-button-bg;
+      color: $gray-button-text;
+      border: none;
+  
+      &:hover {
+        background-color: $gray-button-hover;
+      }
+  
+      &:focus {
+        outline: none;
+        box-shadow: none;
+      }
+    }
+  }
+}

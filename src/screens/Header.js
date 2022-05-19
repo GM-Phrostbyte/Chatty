@@ -1,4 +1,3 @@
-import './Header.css'
 import firebase from '../constants/FirebaseConfig.js';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
@@ -173,16 +172,17 @@ function ChatPanel(props) {
 
 function LogOutPanel(props) {
 
-    const togglePanel = () => {
+    const togglePanel = (e) => {
+        e.preventDefault();
         props.toggle();
     }
 
     return (
-        <div className = 'logOutPanel container' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
-            <div className = "logOutHeader container">
-                <h1>Are you sure?</h1>
+        <div className = 'logOutPanel container d-flex justify-content-center align-items-center flex-column' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
+            <div className = "logOutHeader container d-flex justify-content-center align-items-center">
+                <p className="modalHeaderText">Are you sure?</p>
             </div>
-            <form className='form-actions'>
+            <form className='form-actions d-flex'>
                 <div className= 'theFunniShape'>
                     <button className='signOut btn btn-primary' onClick = {() => auth.signOut()}>SIGN OUT</button>
                 </div>
