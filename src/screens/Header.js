@@ -15,9 +15,7 @@ const firestore = firebase.firestore();
 const usersRef = firestore.collection("users");
 
 function Header() {
-
     const [chatVisibility, setChatVisibility] = useState(false);
-    const [logOutVisibility, setLogOutVisibility] = useState(false);
     const [name, setName] = useState('');
     const [modalShow, setModalShow] = useState(false);
 
@@ -29,9 +27,6 @@ function Header() {
 
     const toggleChat = () => {
         setChatVisibility((prev) => !prev)
-    }
-    const toggleLogOut = () => {
-        setLogOutVisibility((prev) => !prev);
     }
 
     const getName = async() => {
@@ -46,8 +41,9 @@ function Header() {
             <div className="header container-sm d-flex justify-content-start align-items-center">
                 <div className="nameBox flex-grow-1 d-flex align-items-center">
                   <h1 className="displayName flex-grow-1">{name}</h1>   
-                  <button 
-                    className = "logOut btn btn-primary d-flex align-items-center justify-content-center" onClick = {toggleLogOut} >
+                  <button
+                    className = "logOut btn btn-primary d-flex align-items-center justify-content-center"
+                    onClick={() => setModalShow(true)}>
                     <BsBoxArrowRight/>
                   </button>
                 </div>
@@ -55,16 +51,12 @@ function Header() {
                   <BsPlusLg/>
                 </button>
             </div>
-            <Button variant="primary" onClick={() => setModalShow(true)}>
-              Launch vertically centered modal
-            </Button>
 
-            <MyVerticallyCenteredModal
+            <LogOutPanel
               show={modalShow}
               onHide={() => setModalShow(false)}
             />
             <ChatPanel visible={chatVisibility} toggle={toggleChat}></ChatPanel>
-            <LogOutPanel visible={logOutVisibility} toggle={toggleLogOut}></LogOutPanel>
         </div>
     );
 }
@@ -184,46 +176,16 @@ function ChatPanel(props) {
 
 function LogOutPanel(props) {
 
-    const togglePanel = (e) => {
-        e.preventDefault();
-        props.toggle();
-    }
-
-    return (
-      <div className = 'logOutPanel container d-flex justify-content-center align-items-center flex-column' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
-            <div className = "modalHeader container d-flex justify-content-center align-items-center">
-                <p className = "modalHeaderText">Are you sure?</p>
-            </div>
-            <form className ='form-actions d-flex'>
-                <div className = 'theFunniShape'>
-                    <button className ='signOut btn btn-primary' onClick = {() => auth.signOut()}>SIGN OUT</button>
-                </div>
-                <div className = 'theFunniShape'>
-                    <button className='return btn btn-primary' onClick = {togglePanel}>RETURN</button>
-                </div>
-            </form>
-        </div>
-  )
-}
-
-function MyVerticallyCenteredModal(props) {
-  const [modalShow, setModalShow] = useState(false);
-  
-  const test = (e) => {
-    e.preventDefault();
-    props.show = false;
-  }
-
   return (
     <Modal
-      show={props.show}
+      {...props}
       aria-labelledby="contained-modal-title-vcenter"
       centered    
       contentClassName='logOutPanel'
       dialogClassName='d-flex justify-content-center align-items-center'
     >
       <Modal.Header className="modalHeader d-flex justify-content-center align-items-center">
-        <Modal.Title className="modalHeaderText">
+        <Modal.Title className="modalHeaderText" id="contained-modal-title-vcenter">
           Are you sure?
         </Modal.Title>
       </Modal.Header>
@@ -233,11 +195,12 @@ function MyVerticallyCenteredModal(props) {
             <button className='signOut btn btn-primary' onClick={() => auth.signOut()}>SIGN OUT</button>
           </div>
           <div className='theFunniShape'>
-            <button className='return btn btn-primary' onClick = {() => test}>RETURN</button>
+            <Button className='return btn btn-primary' onClick = {props.onHide}>RETURN</Button>
           </div>
         </form>
       </Modal.Body>
     </Modal>
   );
 }
+
 export default Header;
