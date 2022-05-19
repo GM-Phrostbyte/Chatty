@@ -1,4 +1,3 @@
-import './Header.css'
 import firebase from '../constants/FirebaseConfig.js';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
@@ -80,15 +79,11 @@ function ChatPanel(props) {
     const validateForm = async() => {
 
         const myEmail = auth.currentUser.email;
-        console.log('after myEmail');
         const snapshot = await usersRef.doc(newFriendEmail).get();
-        console.log('after snapshot');
 
         const ref = usersRef.doc(myEmail).collection('chats');
-        console.log('after ref');
 
         const snapshot2 = await ref.where('email', '==', newFriendEmail).get();
-        console.log('after snapshot2');
 
         if (!snapshot.exists) {
             setErrors("This user does not exist!");
@@ -97,7 +92,6 @@ function ChatPanel(props) {
         } else {
             return false;
         }
-        console.log("1. " + errors);
         return true;
     }
 
@@ -140,22 +134,14 @@ function ChatPanel(props) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // deleted async
         const errorsRet = await validateForm();
 
-        console.log("2. " + errors);
 
         // basically checking if there is an error or not
         if (!errorsRet) {
             await addData();
-
-            console.log("beforeerros");
-
             setErrors('');
-            console.log("aftereerros");
-
             togglePanel(); 
-            console.log("afterpaneltoggle");
         }
     }
 
@@ -186,16 +172,17 @@ function ChatPanel(props) {
 
 function LogOutPanel(props) {
 
-    const togglePanel = () => {
+    const togglePanel = (e) => {
+        e.preventDefault();
         props.toggle();
     }
 
     return (
-        <div className = 'logOutPanel container' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
-            <div className = "logOutHeader container">
-                <h1>Are you sure?</h1>
+        <div className = 'logOutPanel container d-flex justify-content-center align-items-center flex-column' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
+            <div className = "logOutHeader container d-flex justify-content-center align-items-center">
+                <p className="modalHeaderText">Are you sure?</p>
             </div>
-            <form className='form-actions'>
+            <form className='form-actions d-flex'>
                 <div className= 'theFunniShape'>
                     <button className='signOut btn btn-primary' onClick = {() => auth.signOut()}>SIGN OUT</button>
                 </div>
