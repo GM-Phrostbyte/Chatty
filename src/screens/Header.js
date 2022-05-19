@@ -1,8 +1,10 @@
 import firebase from '../constants/FirebaseConfig.js';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-import React, { useState, useEffect, useRef, Component } from 'react';
+import React, { useState, useEffect, useRef, Component} from 'react';
 import { signOut } from 'firebase/auth';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal'
 
 // icons
 import { BsPlusLg } from 'react-icons/bs';
@@ -17,6 +19,7 @@ function Header() {
     const [chatVisibility, setChatVisibility] = useState(false);
     const [logOutVisibility, setLogOutVisibility] = useState(false);
     const [name, setName] = useState('');
+    const [modalShow, setModalShow] = useState(false);
 
     useEffect(
         () => {
@@ -43,7 +46,8 @@ function Header() {
             <div className="header container-sm d-flex justify-content-start align-items-center">
                 <div className="nameBox flex-grow-1 d-flex align-items-center">
                   <h1 className="displayName flex-grow-1">{name}</h1>   
-                  <button className = "logOut btn btn-primary d-flex align-items-center justify-content-center" onClick = {toggleLogOut}>
+                  <button 
+                    className = "logOut btn btn-primary d-flex align-items-center justify-content-center" onClick = {toggleLogOut} >
                     <BsBoxArrowRight/>
                   </button>
                 </div>
@@ -51,10 +55,18 @@ function Header() {
                   <BsPlusLg/>
                 </button>
             </div>
+            <Button variant="primary" onClick={() => setModalShow(true)}>
+              Launch vertically centered modal
+            </Button>
+
+            <MyVerticallyCenteredModal
+              show={modalShow}
+              onHide={() => setModalShow(false)}
+            />
             <ChatPanel visible={chatVisibility} toggle={toggleChat}></ChatPanel>
             <LogOutPanel visible={logOutVisibility} toggle={toggleLogOut}></LogOutPanel>
         </div>
-    )
+    );
 }
 
 function ChatPanel(props) {
@@ -178,7 +190,7 @@ function LogOutPanel(props) {
     }
 
     return (
-        <div className = 'logOutPanel container d-flex justify-content-center align-items-center flex-column' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
+      <div className = 'logOutPanel container d-flex justify-content-center align-items-center flex-column' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
             <div className = "modalHeader container d-flex justify-content-center align-items-center">
                 <p className = "modalHeaderText">Are you sure?</p>
             </div>
@@ -191,7 +203,41 @@ function LogOutPanel(props) {
                 </div>
             </form>
         </div>
-    )
+  )
 }
 
+function MyVerticallyCenteredModal(props) {
+  const [modalShow, setModalShow] = useState(false);
+  
+  const test = (e) => {
+    e.preventDefault();
+    props.show = false;
+  }
+
+  return (
+    <Modal
+      show={props.show}
+      aria-labelledby="contained-modal-title-vcenter"
+      centered    
+      contentClassName='logOutPanel'
+      dialogClassName='d-flex justify-content-center align-items-center'
+    >
+      <Modal.Header className="modalHeader d-flex justify-content-center align-items-center">
+        <Modal.Title className="modalHeaderText">
+          Are you sure?
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <form className='form-actions d-flex justify-content-center align-items-center'>
+          <div className='theFunniShape'>
+            <button className='signOut btn btn-primary' onClick={() => auth.signOut()}>SIGN OUT</button>
+          </div>
+          <div className='theFunniShape'>
+            <button className='return btn btn-primary' onClick = {() => test}>RETURN</button>
+          </div>
+        </form>
+      </Modal.Body>
+    </Modal>
+  );
+}
 export default Header;
