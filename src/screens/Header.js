@@ -186,16 +186,88 @@ function ChatPanel(props) {
 
 
 function MyVerticallyCenteredModal(props) {
+
   const [newFriendEmail, setNewFriendEmail] = useState('');
+  const [myName, setMyName] = useState('');
+  const [newFriendName, setNewFriendName] = useState('');
   const [errors, setErrors] = useState('');
 
-  const handleSubmit = () => {
-    console.log('submitted!');
+  const resetForm = () => {
+    setNewFriendEmail('');
+    setMyName('');
+    setNewFriendName('');
+    setErrors('');
+  }
+
+
+  const validateForm = async () => {
+
+    const myEmail = auth.currentUser.email;
+    const snapshot = await usersRef.doc(newFriendEmail).get();
+
+    const ref = usersRef.doc(myEmail).collection('chats');
+
+    const snapshot2 = await ref.where('email', '==', newFriendEmail).get();
+
+    if (!snapshot.exists) {
+      setErrors("This user does not exist!");
+    } else if (!snapshot2.empty) {
+      setErrors("You've already messaged this user!");
+    } else {
+      return false;
+    }
+    return true;
   }
 
   const handleInputChange = (e) => {
     setNewFriendEmail(e.target.value);
-}
+  }
+
+  const addData = async () => {
+    const myEmail = auth.currentUser.email;
+    const chatID = firestore.collection('chats').doc();
+    const snapshot = await usersRef.doc(myEmail).get();
+    setMyName(snapshot.data().name);
+    const snapshot2 = await usersRef.doc(newFriendEmail).get();
+    setNewFriendName(snapshot2.data().name);
+
+    console.log(errors);
+
+    await chatID.collection('users').doc('emails').set({
+      userEmail1: myEmail,
+      userEmail2: newFriendEmail
+    });
+
+    await usersRef.doc(myEmail).collection('chats').doc(chatID.id).set({
+      isRead: false,
+      lastMessage: '',
+      time: '',
+      name: newFriendName,
+      email: newFriendEmail
+    });
+
+    await usersRef.doc(newFriendEmail).collection('chats').doc(chatID.id).set({
+      isRead: false,
+      lastMessage: '',
+      time: '',
+      name: myName,
+      email: myEmail
+    });
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const errorsRet = await validateForm();
+
+
+    // basically checking if there is an error or not
+    if (!errorsRet) {
+      await addData();
+      setErrors('');
+      resetForm();
+      props.onHide();
+    }
+  }
 
   return (
     <Modal
