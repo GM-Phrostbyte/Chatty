@@ -4,11 +4,11 @@ import { useCollectionData } from 'react-firebase-hooks/firestore';
 import React, { useState, useEffect, useRef, Component} from 'react';
 import { signOut } from 'firebase/auth';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal'
+import Modal from 'react-bootstrap/Modal';
 
 // icons
-import { BsPlusLg } from 'react-icons/bs';
-import { BsBoxArrowRight } from 'react-icons/bs';
+import { BsPlusLg, BsBoxArrowRight } from 'react-icons/bs';
+import { CgClose } from 'react-icons/cg';
 
 const auth = firebase.auth();
 const firestore = firebase.firestore();
@@ -17,7 +17,8 @@ const usersRef = firestore.collection("users");
 function Header() {
     const [chatVisibility, setChatVisibility] = useState(false);
     const [name, setName] = useState('');
-    const [modalShow, setModalShow] = useState(false);
+    const [logOutShow, setLogOutShow] = useState(false);
+    const [newChatShow, setNewChatShow] = useState(false);
 
     useEffect(
         () => {
@@ -43,7 +44,7 @@ function Header() {
                   <h1 className="displayName flex-grow-1">{name}</h1>   
                   <button
                     className = "logOut btn btn-primary d-flex align-items-center justify-content-center"
-                    onClick={() => setModalShow(true)}>
+                    onClick={() => setLogOutShow(true)}>
                     <BsBoxArrowRight/>
                   </button>
                 </div>
@@ -52,9 +53,18 @@ function Header() {
                 </button>
             </div>
 
+            <Button variant="primary" onClick={() => setNewChatShow(true)}>
+              Launch vertically centered modal
+            </Button>
+
+            <MyVerticallyCenteredModal
+              show={newChatShow}
+              onHide={() => setNewChatShow(false)}
+            />
+
             <LogOutPanel
-              show={modalShow}
-              onHide={() => setModalShow(false)}
+              show={logOutShow}
+              onHide={() => setLogOutShow(false)}
             />
             <ChatPanel visible={chatVisibility} toggle={toggleChat}></ChatPanel>
         </div>
@@ -152,7 +162,7 @@ function ChatPanel(props) {
     return (
         <div className = 'chatPanel container d-flex justify-content-center align-items-center flex-column' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
             <div className = 'modalHeader container d-flex justify-content-center align-items-center'>
-                <button className="btn btn-outline-primary x" onClick={togglePanel}>x</button>
+                <button className="x" onClick={togglePanel}>x</button>
                 <p className = "modalHeaderText">New Message</p>
             </div>
             <form onSubmit={handleSubmit} className="form-actions">
@@ -172,6 +182,56 @@ function ChatPanel(props) {
             </form>
         </div>
     )
+}
+
+
+function MyVerticallyCenteredModal(props) {
+  const [newFriendEmail, setNewFriendEmail] = useState('');
+  const [errors, setErrors] = useState('');
+
+  const handleSubmit = () => {
+    console.log('submitted!');
+  }
+
+  const handleInputChange = (e) => {
+    setNewFriendEmail(e.target.value);
+}
+
+  return (
+    <Modal
+      {...props}
+      aria-labelledby="newMessage"
+      centered    
+      contentClassName='chatPanel'
+      dialogClassName='d-flex justify-content-center align-items-center'
+    >
+      <Modal.Header className="modalHeader">
+        <button className="x" onClick={props.onHide}>
+          <CgClose/>
+        </button>
+        <Modal.Title className="modalHeaderText" id="newMessage">
+          New Message
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <form onSubmit={handleSubmit} className="form-actions">
+          <div className='newMessage'>
+            <input
+              type='email'
+              className="newUser form-control"
+              placeholder="Email"
+              value={newFriendEmail}
+              onChange={handleInputChange}
+            />
+            <p className="errors">{errors}</p>
+          </div>
+          <div className='newMessageSubmit container'>
+            <button type='submit' className='next btn btn-primary'>NEXT</button>
+          </div>
+        </form>
+      </Modal.Body>
+    </Modal>
+  );
 }
 
 function LogOutPanel(props) {
