@@ -110,6 +110,14 @@ $error-size: .9rem;
   &-primary {
     color: white;
   }
+
+  &-hover {
+    color: white;
+  }
+
+  &-focus {
+    color: white;
+  }
 }
 
 .App {
@@ -308,11 +316,11 @@ $error-size: .9rem;
   margin-top: 3rem; // to remove ^
 
   .form-actions {
-    width : 29rem;
 
     input {
       @include inputField;
       margin-bottom: .8rem;
+      width: 26rem;
     }
     .errors {
       font-size: $error-size;
