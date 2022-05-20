@@ -1,19 +1,23 @@
-import './Header.css'
 import firebase from '../constants/FirebaseConfig.js';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
-import React, { useState, useEffect, useRef, Component } from 'react';
+import React, { useState, useEffect, useRef, Component} from 'react';
 import { signOut } from 'firebase/auth';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal'
+
+// icons
+import { BsPlusLg } from 'react-icons/bs';
+import { BsBoxArrowRight } from 'react-icons/bs';
 
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 const usersRef = firestore.collection("users");
 
 function Header() {
-
     const [chatVisibility, setChatVisibility] = useState(false);
-    const [logOutVisibility, setLogOutVisibility] = useState(false);
     const [name, setName] = useState('');
+    const [modalShow, setModalShow] = useState(false);
 
     useEffect(
         () => {
@@ -23,9 +27,6 @@ function Header() {
 
     const toggleChat = () => {
         setChatVisibility((prev) => !prev)
-    }
-    const toggleLogOut = () => {
-        setLogOutVisibility((prev) => !prev);
     }
 
     const getName = async() => {
@@ -37,15 +38,27 @@ function Header() {
 
     return (
         <div className='container bg-secondary'>
-            <div className="rectangle1 container-sm d-flex justify-content-center align-items-center">
-                <h1 className="displayName h1">{name}</h1>
-                <button className = "logOut btn btn-primary" onClick = {toggleLogOut}>logOut</button>
-                <button className = "newChat btn btn-primary" onClick = {toggleChat}>addChat</button>
+            <div className="header container-sm d-flex justify-content-start align-items-center">
+                <div className="nameBox flex-grow-1 d-flex align-items-center">
+                  <h1 className="displayName flex-grow-1">{name}</h1>   
+                  <button
+                    className = "logOut btn btn-primary d-flex align-items-center justify-content-center"
+                    onClick={() => setModalShow(true)}>
+                    <BsBoxArrowRight/>
+                  </button>
+                </div>
+                <button className = "newChat btn btn-primary d-flex align-items-center justify-content-center" onClick = {toggleChat}>
+                  <BsPlusLg/>
+                </button>
             </div>
+
+            <LogOutPanel
+              show={modalShow}
+              onHide={() => setModalShow(false)}
+            />
             <ChatPanel visible={chatVisibility} toggle={toggleChat}></ChatPanel>
-            <LogOutPanel visible={logOutVisibility} toggle={toggleLogOut}></LogOutPanel>
         </div>
-    )
+    );
 }
 
 function ChatPanel(props) {
@@ -70,15 +83,11 @@ function ChatPanel(props) {
     const validateForm = async() => {
 
         const myEmail = auth.currentUser.email;
-        console.log('after myEmail');
         const snapshot = await usersRef.doc(newFriendEmail).get();
-        console.log('after snapshot');
 
         const ref = usersRef.doc(myEmail).collection('chats');
-        console.log('after ref');
 
         const snapshot2 = await ref.where('email', '==', newFriendEmail).get();
-        console.log('after snapshot2');
 
         if (!snapshot.exists) {
             setErrors("This user does not exist!");
@@ -87,7 +96,6 @@ function ChatPanel(props) {
         } else {
             return false;
         }
-        console.log("1. " + errors);
         return true;
     }
 
@@ -130,30 +138,22 @@ function ChatPanel(props) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // deleted async
         const errorsRet = await validateForm();
 
-        console.log("2. " + errors);
 
         // basically checking if there is an error or not
         if (!errorsRet) {
             await addData();
-
-            console.log("beforeerros");
-
             setErrors('');
-            console.log("aftereerros");
-
             togglePanel(); 
-            console.log("afterpaneltoggle");
         }
     }
 
     return (
-        <div className = 'chatPanel container' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
-            <div>
-                <button className=" btn btn-outline-primary x" onClick={togglePanel}>x</button>
-                <h1>New Message</h1>
+        <div className = 'chatPanel container d-flex justify-content-center align-items-center flex-column' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
+            <div className = 'modalHeader container d-flex justify-content-center align-items-center'>
+                <button className="btn btn-outline-primary x" onClick={togglePanel}>x</button>
+                <p className = "modalHeaderText">New Message</p>
             </div>
             <form onSubmit={handleSubmit} className="form-actions">
                 <div className = 'newMessage'>
@@ -164,11 +164,11 @@ function ChatPanel(props) {
                         value = {newFriendEmail} 
                         onChange = {handleInputChange}
                     />
+                    <p className="errors">{errors}</p>
                 </div>
                 <div className = 'newMessageSubmit container'>
-                    <button type='submit' className='btn btn-primary'>Next</button>
+                    <button type='submit' className='next btn btn-primary'>NEXT</button>
                 </div>
-                <p>{errors}</p>
             </form>
         </div>
     )
@@ -176,25 +176,31 @@ function ChatPanel(props) {
 
 function LogOutPanel(props) {
 
-    const togglePanel = () => {
-        props.toggle();
-    }
-
-    return (
-        <div className = 'logOutPanel container' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
-            <div className = "logOutHeader container">
-                <h1>Are you sure?</h1>
-            </div>
-            <form className='form-actions'>
-                <div className= 'theFunniShape'>
-                    <button className='signOut btn btn-primary' onClick = {() => auth.signOut()}>SIGN OUT</button>
-                </div>
-                <div className= 'theFunniShape'>
-                    <button className='return btn btn-primary' onClick = {togglePanel}>RETURN</button>
-                </div>
-            </form>
-        </div>
-    )
+  return (
+    <Modal
+      {...props}
+      aria-labelledby="contained-modal-title-vcenter"
+      centered    
+      contentClassName='logOutPanel'
+      dialogClassName='d-flex justify-content-center align-items-center'
+    >
+      <Modal.Header className="modalHeader d-flex justify-content-center align-items-center">
+        <Modal.Title className="modalHeaderText" id="contained-modal-title-vcenter">
+          Are you sure?
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <form className='form-actions d-flex justify-content-center align-items-center'>
+          <div className='theFunniShape'>
+            <button className='signOut btn btn-primary' onClick={() => auth.signOut()}>SIGN OUT</button>
+          </div>
+          <div className='theFunniShape'>
+            <Button className='return btn btn-primary' onClick = {props.onHide}>RETURN</Button>
+          </div>
+        </form>
+      </Modal.Body>
+    </Modal>
+  );
 }
 
 export default Header;

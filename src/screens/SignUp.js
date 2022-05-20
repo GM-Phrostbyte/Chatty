@@ -1,6 +1,6 @@
-import "./Sign.css";
 import React, { useState, useEffect } from "react";
 import firebase from "../constants/FirebaseConfig.js";
+import { googleIcon } from './SignIn';
 
 const firestore = firebase.firestore();
 
@@ -153,7 +153,7 @@ function SignUp(props) {
             <button
               class="btn btn-outline-primary google"
               onClick={props.google}
-            >
+            ><img src={googleIcon} alt='GoogleIcon'/>
               Connect With Google
             </button>
             <div>
