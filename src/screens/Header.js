@@ -15,7 +15,6 @@ const firestore = firebase.firestore();
 const usersRef = firestore.collection("users");
 
 function Header() {
-    const [chatVisibility, setChatVisibility] = useState(false);
     const [name, setName] = useState('');
     const [logOutShow, setLogOutShow] = useState(false);
     const [newChatShow, setNewChatShow] = useState(false);
@@ -25,10 +24,6 @@ function Header() {
             getName();
         }
     );
-
-    const toggleChat = () => {
-        setChatVisibility((prev) => !prev)
-    }
 
     const getName = async() => {
         const email = auth.currentUser.email;
