@@ -7,13 +7,13 @@ const usersRef = firestore.collection('users');
 
 function ChatContact(props) {
   const details = props.details;
+  console.log('stuffhappened')
   return (
       <div className='contact'>
         <button>
           <p>{details.name}</p>
           <p>{details.lastMessage}</p>
-          <p>{details.isRead}</p>
-          <p>{details.time}</p>
+          <p>{details.isRead}</p>   
         </button>
       </div>
   );
@@ -24,7 +24,7 @@ function ChatList(props) {
 
   useEffect(() => {
     getChats();
-  }); // no dependencies may be reason I fried the db
+  }, []); // WARNING: may cause infinite loop
 
   const getChats = async() => {
       const email = auth.currentUser.email;
@@ -34,6 +34,7 @@ function ChatList(props) {
       let contacts = [];
       snapshot.forEach((doc) => contacts.push(doc.data()));
       setChatList(contacts);
+      console.log(contacts);
   }
 
   return (
