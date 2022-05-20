@@ -6,7 +6,6 @@ import firebase from './constants/FirebaseConfig.js';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import SignIn from './screens/SignIn';
-import ChatList from './screens/ChatList';
 
 
 const auth = firebase.auth();
