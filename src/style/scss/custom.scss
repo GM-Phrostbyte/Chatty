@@ -1,3 +1,4 @@
+
 // Override default variables before the import
 $auth-card-width: 30rem;
 $auth-card-height: 30rem;
@@ -72,7 +73,7 @@ $error-size: .9rem;
   border-radius: $modal-border-radius;
   box-shadow: 0px 4px 53px 0px #00000026;
   padding: 0px;
-  padding-bottom: 3rem;
+  padding-bottom: 2rem;
 }
 
 @mixin modalButton($theme) {
@@ -107,6 +108,14 @@ $error-size: .9rem;
   border-radius: $button-border-radius;
 
   &-primary {
+    color: white;
+  }
+
+  &-hover {
+    color: white;
+  }
+
+  &-focus {
     color: white;
   }
 }
@@ -267,22 +276,36 @@ $error-size: .9rem;
 
 // modals
 .modalHeader {
-  border-top-left-radius: $modal-border-radius;
-  border-top-right-radius: $modal-border-radius;
+  border-top-left-radius: calc($modal-border-radius - 1px);
+  border-top-right-radius: calc($modal-border-radius - 1px);
   background-color: $primary;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1rem;
   border-bottom-left-radius: 40%;
   border-bottom-right-radius: 40%;
 
   .x {
-    background-color: #C58CFF;
-    margin-right: 1rem;
+    float: left;
+    font-size: 1.5rem;
+    margin-top: -2.5rem;
+    margin-left: 0.5rem;
+    padding: 0;
+    background-color: $primary;
+    outline:none;
+    border:none;
+    color: white;
+    transition: .2s ease-in-out;
+
+    &:hover {
+      outline:none;
+      border:none;
+      transform: scale(1.3);
+    }
   }
   .modalHeaderText {
     color: white;
     font-size: 1.2rem;
     font-weight: 600;
-    padding-top: 2rem;
+    padding-top: 1rem;
     padding-bottom: 1rem;
   }
 }
@@ -293,11 +316,11 @@ $error-size: .9rem;
   margin-top: 3rem; // to remove ^
 
   .form-actions {
-    width : 29rem;
 
     input {
       @include inputField;
       margin-bottom: .8rem;
+      width: 26rem;
     }
     .errors {
       font-size: $error-size;
@@ -310,6 +333,10 @@ $error-size: .9rem;
       padding-right: 4rem;
     }
   }
+}
+
+#newMessage {
+  margin-right: 10.5rem;
 }
 
 // logout modal
