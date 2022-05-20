@@ -107,7 +107,8 @@ function ChatPanel(props) {
 
     const myName = snapshot.data().name;
     const newFriendName = snapshot2.data().name;
-   // const time = firebase.firestore.FieldValue.serverTimestamp();
+    const time = firebase.firestore.FieldValue.serverTimestamp();
+    console.log(time);
     console.log(errors);
 
     await chatID.collection('users').doc('emails').set({
@@ -118,7 +119,7 @@ function ChatPanel(props) {
     await usersRef.doc(myEmail).collection('chats').doc(chatID.id).set({
       isRead: false,
       lastMessage: '',
-      time: 'time',
+      time: time,
       name: newFriendName,
       email: newFriendEmail
     });
@@ -126,7 +127,7 @@ function ChatPanel(props) {
     await usersRef.doc(newFriendEmail).collection('chats').doc(chatID.id).set({
       isRead: false,
       lastMessage: '',
-      time: 'time',
+      time: time,
       name: myName,
       email: myEmail
     });
