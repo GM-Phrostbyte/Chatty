@@ -59,7 +59,7 @@ function ChatRoom() {
 
       <form onSubmit={sendMessage}>
         <input value={formValue} onChange={onInputText}></input>
-        <button type="submit">Send</button>
+        <button className="btn " type="submit">Send</button>
       </form>
     </>
   );
@@ -77,4 +77,7 @@ function ChatMessage(props) {
   )
 }
 
+function ChatHeader(props) {
+
+}
 export default App;
