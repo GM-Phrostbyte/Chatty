@@ -126,8 +126,17 @@ $chat-bubble-sent: $primary;
 .App {
   background-color: $secondary;
   height: 100vh;
+  margin: 0;
+  padding: 0;
+
+  .AppDiv {
+    margin: 0;
+    padding: 0;
+  }
 }
 
+
+// Sign In / Sign Up
 .card {
   z-index: 2;
   width: $auth-card-width;
@@ -243,11 +252,16 @@ $chat-bubble-sent: $primary;
 }
 
 // header page
+.headerDiv {
+  padding: 0;
+  margin: 0;
+}
 
 .header {
-  //background-color: red;
+  padding-left: 0px;
   width: $header-width; //will be changed ^ 33%?
   padding-top: 3rem;
+  margin-left: 0px;
 
   .nameBox {
     background-color: $primary;
