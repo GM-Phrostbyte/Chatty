@@ -37,7 +37,7 @@ function Header() {
    
 
     return (
-        <div className='container bg-secondary'>
+        <div className='container-fluid bg-secondary'>
             <div className="header container-sm d-flex justify-content-start align-items-center">
                 <div className="nameBox flex-grow-1 d-flex align-items-center">
                   <h1 className="displayName flex-grow-1">{name}</h1>   

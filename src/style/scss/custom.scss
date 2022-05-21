@@ -336,25 +336,33 @@ $chat-bubble-sent: $primary;
 .message {
   display: flex;
   align-items: center;
+  text-align: center;
+  vertical-align:middle;
+  margin-top: 1rem;
+  max-inline-size: 45%;
+  word-break: break-all;
+  overflow-wrap: break-word;
+}
 
-  .sent {
-    flex-direction: row-reverse;
-    border-radius: 22px 22px 22px 0px;
-    background: $chat-bubble-sent;
+.sent {
+  flex-direction: row-reverse;
+  border-radius: 22px 22px 0px 22px;
+  background: $chat-bubble-sent;
+  align-self: flex-end;
 
-    p {
-      color: white;
-      align-self: flex-end;
-    }
+  span {
+    color: white;
+    align-self: flex-end;
   }
+}
 
-  .received {
-    background-color: $chat-bubble-received;
-    border-radius: 22px 22px 22px 22px;
+.received {
+  background-color: $chat-bubble-received;
+  border-radius: 22px 22px 22px 0px;
+  align-self: flex-start;
 
-    p {
-      color: black;
-    }
+  span {
+    color: black;
   }
 }
 
@@ -368,10 +376,11 @@ $chat-bubble-sent: $primary;
   width: 3rem;
   height: 3rem;
   background-color: $primary;
-  text-align: center;
+  align-items: center;
+  justify-content: center;
 
 
-  p {
+  span {
     font-size: 24px;
     font-weight: 600;
     color: #ECECEC;
@@ -388,4 +397,19 @@ $chat-bubble-sent: $primary;
 
 .send-btn {
   margin-left: -3rem;
+}
+
+.chat-container {
+  overflow-y: scroll;
+}
+
+.chat-whole {
+  padding-top: 3rem;
+  height: 100vh;
+}
+
+.chat-whole::-webkit-scrollbar { width: 0 !important }
+
+.trash {
+  align-self: flex-end;
 }

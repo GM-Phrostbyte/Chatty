@@ -16,7 +16,7 @@ function App() {
   return (
     <div className="App">
       {user ? (
-        <div className="container d-flex flex-row">
+        <div className=" container-fluid d-flex flex-row">
           <Header />
           <ChatRoom />
         </div>
@@ -37,6 +37,9 @@ function ChatRoom(props) {
 
   const sendMessage = async (e) => {
     e.preventDefault();
+    if (formValue === "") {
+      return;
+    }
 
     const { uid } = auth.currentUser;
 
@@ -55,22 +58,23 @@ function ChatRoom(props) {
   };
 
   return (
-    <main className="container d-flex flex-column">
+    <main className="container-fluid d-flex flex-column chat-whole border border-primary">
       <ChatName name={props.currentName} />
-      <div className="container d-flex flex-column flex-grow-1">
+      <div className="container d-flex flex-column chat-container">
         {messages &&
           messages.map((msg) => <ChatMessage key={msg.id} message={msg} />)}
         <div ref={dummy}></div>
       </div>
 
       <div>
-        <form onSubmit={sendMessage} className="form-actions d-flex align-items-center">
+        <form onSubmit={sendMessage} className="py-3 form-actions d-flex align-items-center">
           <input
             value={formValue}
             onChange={onInputText}
-            className="form-control chat-input p-1"
+            className="form-control chat-input"
+            placeholder="Message..."
           ></input>
-          <button className="send-btn btn p-0" type="submit">
+          <button className={"send-btn btn p-0 "} type="submit">
             <svg
               width="50"
               height="50"
@@ -94,18 +98,18 @@ function ChatName({ name }) {
   const firstLetter = name.charAt(0).toUpperCase();
 
   return (
-    <div className="chatname container bg-warning p-2">
+    <div className="chatname container px-2 py-3">
       <div className="row">
         <div className="col-1">
-          <div className="letter-icon">
-            <p>{firstLetter}</p>
+          <div className="letter-icon d-flex">
+            <span>{firstLetter}</span>
           </div>
         </div>
         <div className="col-8">
           <p className="h2">{name}</p>
         </div>
-        <div className="col-3">
-          <button className="btn btn-light border-0">
+        <div className="col-3 d-flex flex-row-reverse">
+          <button className="btn btn-light border-0 trash align-self-center">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -129,8 +133,8 @@ function ChatMessage(props) {
   const messageClass = uid === auth.currentUser.uid ? "sent" : "received";
 
   return (
-    <div className={"message " + messageClass}>
-      <p>{text}</p>
+    <div className={"message px-3 py-2 " + messageClass}>
+      <span>{text}</span>
     </div>
   );
 }
