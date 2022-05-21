@@ -1,10 +1,8 @@
 import firebase from '../constants/FirebaseConfig.js';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
 import React, { useState, useEffect, useRef, Component} from 'react';
-import { signOut } from 'firebase/auth';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import ChatList from './ChatList'
 
 // icons
 import { BsPlusLg, BsBoxArrowRight } from 'react-icons/bs';
@@ -19,19 +17,16 @@ function Header() {
     const [logOutShow, setLogOutShow] = useState(false);
     const [newChatShow, setNewChatShow] = useState(false);
 
-    useEffect(
-        () => {
-            getName();
-        }
-    );
+    useEffect(() => {
+        getName();
+    }, []);
 
     const getName = async() => {
-        const email = auth.currentUser.email;
-        const snapshot = await usersRef.doc(email).get(); 
-        setName(snapshot.data().name);
+         const email = auth.currentUser.email;
+         const snapshot = await usersRef.doc(email).get(); 
+         setName(snapshot.data().name);
     }
    
-
     return (
         <div className='container-fluid bg-secondary'>
             <div className="header container-sm d-flex justify-content-start align-items-center">
@@ -59,6 +54,7 @@ function Header() {
               show={logOutShow}
               onHide={() => setLogOutShow(false)}
             />
+   <ChatList />
         </div>
     );
 }
@@ -67,17 +63,12 @@ function Header() {
 function ChatPanel(props) {
 
   const [newFriendEmail, setNewFriendEmail] = useState('');
-  const [myName, setMyName] = useState('');
-  const [newFriendName, setNewFriendName] = useState('');
   const [errors, setErrors] = useState('');
 
   const resetForm = () => {
     setNewFriendEmail('');
-    setMyName('');
-    setNewFriendName('');
     setErrors('');
   }
-
 
   const validateForm = async () => {
 
@@ -106,9 +97,11 @@ function ChatPanel(props) {
     const myEmail = auth.currentUser.email;
     const chatID = firestore.collection('chats').doc();
     const snapshot = await usersRef.doc(myEmail).get();
-    setMyName(snapshot.data().name);
     const snapshot2 = await usersRef.doc(newFriendEmail).get();
-    setNewFriendName(snapshot2.data().name);
+
+    const myName = snapshot.data().name;
+    const newFriendName = snapshot2.data().name;
+    const time = firebase.firestore.FieldValue.serverTimestamp();
 
     console.log(errors);
 
@@ -120,7 +113,7 @@ function ChatPanel(props) {
     await usersRef.doc(myEmail).collection('chats').doc(chatID.id).set({
       isRead: false,
       lastMessage: '',
-      time: '',
+      time: time,
       name: newFriendName,
       email: newFriendEmail
     });
@@ -128,11 +121,12 @@ function ChatPanel(props) {
     await usersRef.doc(newFriendEmail).collection('chats').doc(chatID.id).set({
       isRead: false,
       lastMessage: '',
-      time: '',
+      time: time,
       name: myName,
       email: myEmail
     });
-  }
+
+   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -146,6 +140,7 @@ function ChatPanel(props) {
       resetForm();
       props.onHide();
     }
+
   }
 
   return (
