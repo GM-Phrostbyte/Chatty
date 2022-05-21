@@ -1,4 +1,3 @@
-import "./Sign.css";
 import React, { useState, useEffect } from "react";
 import firebase from "../constants/FirebaseConfig.js";
 import { googleIcon } from './SignIn';
@@ -143,7 +142,7 @@ function SignUp(props) {
               {formErrors.confirmPwd && <p>{formErrors.confirmPwd}</p>}
               {formErrors.pwdMismatch && <p>{formErrors.pwdMismatch}</p>}
 
-              <button type="submit" className="login btn btn-primary">
+              <button type="submit" className="login btn btn-primary" onClick={signUpWithEmail}>
                 SIGN UP
               </button>
             </div>
