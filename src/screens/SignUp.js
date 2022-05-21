@@ -47,15 +47,15 @@ function SignUp(props) {
   };
 
   useEffect(() => {
-    if (hasSubmitted && Object.keys(formErrors).length === 0) {
+    if (hasSubmitted && Object.values(formErrors).every(value => value === 'valid ')) {
       signUpWithEmail();
     }
   }, [formErrors]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setFormErrors(validateForm());
     setHasSubmitted(true);
+    setFormErrors(validateForm());
   };
 
   const validateForm = () => {
@@ -88,7 +88,7 @@ function SignUp(props) {
     <div className="d-flex justify-content-center auth-container bg-primary bg-gradient align-items-center">
       <div className="Sign auth card d-flex shadow-lg">
         <div className="card-header">
-          <h2 className="h2">Sign In</h2>
+          <h2 className="h2">Sign Up</h2>
         </div>
 
         <div className="card-body">
@@ -142,7 +142,7 @@ function SignUp(props) {
               {formErrors.confirmPwd && <p>{formErrors.confirmPwd}</p>}
               {formErrors.pwdMismatch && <p>{formErrors.pwdMismatch}</p>}
 
-              <button type="submit" className="login btn btn-primary">
+              <button type="submit" className="login btn btn-primary" onClick={signUpWithEmail}>
                 SIGN UP
               </button>
             </div>

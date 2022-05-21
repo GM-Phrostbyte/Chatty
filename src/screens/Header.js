@@ -1,177 +1,183 @@
 import firebase from '../constants/FirebaseConfig.js';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
 import React, { useState, useEffect, useRef, Component} from 'react';
-import { signOut } from 'firebase/auth';
 import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal'
+import Modal from 'react-bootstrap/Modal';
+import ChatList from './ChatList'
 
 // icons
-import { BsPlusLg } from 'react-icons/bs';
-import { BsBoxArrowRight } from 'react-icons/bs';
+import { BsPlusLg, BsBoxArrowRight } from 'react-icons/bs';
+import { CgClose } from 'react-icons/cg';
 
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 const usersRef = firestore.collection("users");
 
 function Header() {
-    const [chatVisibility, setChatVisibility] = useState(false);
     const [name, setName] = useState('');
-    const [modalShow, setModalShow] = useState(false);
+    const [logOutShow, setLogOutShow] = useState(false);
+    const [newChatShow, setNewChatShow] = useState(false);
 
-    useEffect(
-        () => {
-            getName();
-        }
-    );
-
-    const toggleChat = () => {
-        setChatVisibility((prev) => !prev)
-    }
+    useEffect(() => {
+        getName();
+    }, []);
 
     const getName = async() => {
-        const email = auth.currentUser.email;
-        const snapshot = await usersRef.doc(email).get(); 
-        setName(snapshot.data().name);
+         const email = auth.currentUser.email;
+         const snapshot = await usersRef.doc(email).get(); 
+         setName(snapshot.data().name);
     }
    
-
     return (
-        <div className='container bg-secondary'>
+        <div className='container-fluid bg-secondary'>
             <div className="header container-sm d-flex justify-content-start align-items-center">
                 <div className="nameBox flex-grow-1 d-flex align-items-center">
                   <h1 className="displayName flex-grow-1">{name}</h1>   
                   <button
                     className = "logOut btn btn-primary d-flex align-items-center justify-content-center"
-                    onClick={() => setModalShow(true)}>
+                    onClick={() => setLogOutShow(true)}>
                     <BsBoxArrowRight/>
                   </button>
                 </div>
-                <button className = "newChat btn btn-primary d-flex align-items-center justify-content-center" onClick = {toggleChat}>
+                <button 
+                  className = "newChat btn btn-primary d-flex align-items-center justify-content-center" 
+                  onClick = {() => setNewChatShow(true)}>
                   <BsPlusLg/>
                 </button>
             </div>
 
-            <LogOutPanel
-              show={modalShow}
-              onHide={() => setModalShow(false)}
+            <ChatPanel
+              show={newChatShow}
+              onHide={() => setNewChatShow(false)}
             />
-            <ChatPanel visible={chatVisibility} toggle={toggleChat}></ChatPanel>
+
+            <LogOutPanel
+              show={logOutShow}
+              onHide={() => setLogOutShow(false)}
+            />
+   <ChatList />
         </div>
     );
 }
 
+
 function ChatPanel(props) {
-    const [newFriendEmail, setNewFriendEmail] = useState('');
-    const [myName, setMyName] = useState('');
-    const [newFriendName, setNewFriendName] = useState('');
-    const [errors, setErrors] = useState('');
 
-    const togglePanel = () => {
-        resetForm();
-        props.toggle();
+  const [newFriendEmail, setNewFriendEmail] = useState('');
+  const [errors, setErrors] = useState('');
+
+  const resetForm = () => {
+    setNewFriendEmail('');
+    setErrors('');
+  }
+
+  const validateForm = async () => {
+
+    const myEmail = auth.currentUser.email;
+    const snapshot = await usersRef.doc(newFriendEmail).get();
+
+    const ref = usersRef.doc(myEmail).collection('chats');
+
+    const snapshot2 = await ref.where('email', '==', newFriendEmail).get();
+
+    if (!snapshot.exists) {
+      setErrors("This user does not exist!");
+    } else if (!snapshot2.empty) {
+      setErrors("You've already messaged this user!");
+    } else {
+      return false;
+    }
+    return true;
+  }
+
+  const handleInputChange = (e) => {
+    setNewFriendEmail(e.target.value);
+  }
+
+  const addData = async () => {
+    const myEmail = auth.currentUser.email;
+    const chatID = firestore.collection('chats').doc();
+    const snapshot = await usersRef.doc(myEmail).get();
+    const snapshot2 = await usersRef.doc(newFriendEmail).get();
+
+    const myName = snapshot.data().name;
+    const newFriendName = snapshot2.data().name;
+    const time = firebase.firestore.FieldValue.serverTimestamp();
+
+    console.log(errors);
+
+    await chatID.collection('users').doc('emails').set({
+      userEmail1: myEmail,
+      userEmail2: newFriendEmail
+    });
+
+    await usersRef.doc(myEmail).collection('chats').doc(chatID.id).set({
+      isRead: false,
+      lastMessage: '',
+      time: time,
+      name: newFriendName,
+      email: newFriendEmail
+    });
+
+    await usersRef.doc(newFriendEmail).collection('chats').doc(chatID.id).set({
+      isRead: false,
+      lastMessage: '',
+      time: time,
+      name: myName,
+      email: myEmail
+    });
+
+   }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const errorsRet = await validateForm();
+
+
+    // basically checking if there is an error or not
+    if (!errorsRet) {
+      await addData();
+      setErrors('');
+      resetForm();
+      props.onHide();
     }
 
-    const resetForm = () => {
-        setNewFriendEmail('');
-        setMyName('');
-        setNewFriendName('');
-        setErrors('');
-    }
+  }
 
-
-    const validateForm = async() => {
-
-        const myEmail = auth.currentUser.email;
-        const snapshot = await usersRef.doc(newFriendEmail).get();
-
-        const ref = usersRef.doc(myEmail).collection('chats');
-
-        const snapshot2 = await ref.where('email', '==', newFriendEmail).get();
-
-        if (!snapshot.exists) {
-            setErrors("This user does not exist!");
-        } else if (!snapshot2.empty) {
-            setErrors("You've already messaged this user!");
-        } else {
-            return false;
-        }
-        return true;
-    }
-
-    const handleInputChange = (e) => {
-        setNewFriendEmail(e.target.value);
-    }
-
-
-    const addData = async () => {
-        const myEmail = auth.currentUser.email;
-        const chatID = firestore.collection('chats').doc();
-        const snapshot = await usersRef.doc(myEmail).get(); 
-        setMyName(snapshot.data().name);
-        const snapshot2 = await usersRef.doc(newFriendEmail).get();
-        setNewFriendName(snapshot2.data().name);
-
-        console.log(errors);
-
-        await chatID.collection('users').doc('emails').set({
-            userEmail1 : myEmail,
-            userEmail2 : newFriendEmail
-        });
-
-        await usersRef.doc(myEmail).collection('chats').doc(chatID.id).set({
-            isRead: false,
-            lastMessage: '',
-            time: '',
-            name: newFriendName,
-            email: newFriendEmail 
-        });
-
-        await usersRef.doc(newFriendEmail).collection('chats').doc(chatID.id).set({
-            isRead: false,
-            lastMessage: '',
-            time: '',
-            name: myName, 
-            email: myEmail
-        });
-    }
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        const errorsRet = await validateForm();
-
-
-        // basically checking if there is an error or not
-        if (!errorsRet) {
-            await addData();
-            setErrors('');
-            togglePanel(); 
-        }
-    }
-
-    return (
-        <div className = 'chatPanel container d-flex justify-content-center align-items-center flex-column' style = {{visibility: props.visible ? 'visible' : 'hidden'}}>
-            <div className = 'modalHeader container d-flex justify-content-center align-items-center'>
-                <button className="btn btn-outline-primary x" onClick={togglePanel}>x</button>
-                <p className = "modalHeaderText">New Message</p>
-            </div>
-            <form onSubmit={handleSubmit} className="form-actions">
-                <div className = 'newMessage'>
-                    <input 
-                        type='email' 
-                        className="newUser form-control" 
-                        placeholder="Email" 
-                        value = {newFriendEmail} 
-                        onChange = {handleInputChange}
-                    />
-                    <p className="errors">{errors}</p>
-                </div>
-                <div className = 'newMessageSubmit container'>
-                    <button type='submit' className='next btn btn-primary'>NEXT</button>
-                </div>
-            </form>
-        </div>
-    )
+  return (
+    <Modal
+      {...props}
+      aria-labelledby="newMessage"
+      centered    
+      contentClassName='chatPanel'
+      dialogClassName='d-flex justify-content-center align-items-center'
+    >
+      <Modal.Header className="modalHeader">
+        <button className="x" onClick={props.onHide}>
+          <CgClose/>
+        </button>
+        <Modal.Title className="modalHeaderText" id="newMessage">
+          New Message
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <form onSubmit={handleSubmit} className="form-actions d-flex justify-content-center align-items-center flex-column">
+          <div className='newMessage'>
+            <input
+              type='email'
+              className="newUser form-control"
+              placeholder="Email"
+              value={newFriendEmail}
+              onChange={handleInputChange}
+            />
+            <p className="errors">{errors}</p>
+          </div>
+          <div className='newMessageSubmit container'>
+            <button type='submit' className='next btn btn-primary'>NEXT</button>
+          </div>
+        </form>
+      </Modal.Body>
+    </Modal>
+  );
 }
 
 function LogOutPanel(props) {
