@@ -11,17 +11,28 @@ function ChatList(props) {
   useEffect(() => {
     console.log('effectran')
     getChats();
-  }, []); // WARNING: may cause infinite loop
+  }, []); 
 
   const getChats = async() => {
-      const email = auth.currentUser.email;
-      const usersChatsRef = usersRef.doc(email).collection('chats');
-      const snapshot = await usersChatsRef.orderBy('time', 'desc').get();
+    const email = auth.currentUser.email;
+    const usersChatsRef = usersRef.doc(email).collection('chats');
+    let contacts = [];
 
-      let contacts = [];
-      snapshot.forEach((doc) => contacts.push(doc.data()));
-      setChatList(contacts);
-      console.log(contacts);
+    usersChatsRef.orderBy('time', 'desc').onSnapshot(
+      (querySnapshot) => {
+        contacts = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          // if time is null
+          if (!data.time && doc.metadata.hasPendingWrites) {
+            data.time = firebase.firestore.Timestamp.now();
+          }
+          contacts.push(data);
+        });
+
+        setChatList(contacts);
+        console.log(contacts);
+      });
   }
 
   return (

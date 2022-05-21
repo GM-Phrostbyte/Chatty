@@ -54,8 +54,7 @@ function Header() {
               show={logOutShow}
               onHide={() => setLogOutShow(false)}
             />
-
-            <ChatList />
+   <ChatList />
         </div>
     );
 }
