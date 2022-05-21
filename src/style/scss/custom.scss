@@ -107,6 +107,13 @@ $chat-bubble-sent: $primary;
 // Import Bootstrap and its default variables
 @import "~bootstrap/scss/bootstrap.scss";
 
+.chat-list-side {
+  background-color: #E5E5E5;
+}
+
+.chat-background {
+  background-color: white;
+}
 .btn {
   border-radius: $button-border-radius;
 
@@ -395,6 +402,7 @@ $chat-bubble-sent: $primary;
 .chat-container {
   height: $chat-container-height;
   overflow-x: hidden;
+  border-top: 1px solid #CFCFCF;
 }
 
 .letter-icon {
@@ -418,7 +426,8 @@ $chat-bubble-sent: $primary;
   background-color: #ECECEC;
   color: #AAAAAA;
   border: none;
-  height: 35px;
+  height: 45px;
+  padding-left: 2rem;
 }
 
 .send-btn {
@@ -427,15 +436,30 @@ $chat-bubble-sent: $primary;
 
 .chat-container {
   overflow-y: scroll;
+  
 }
 
-.chat-whole {
-  padding-top: 3rem;
-  height: 100vh;
+.chat-container::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
 }
+.chat-whole {
+  padding-top: 1.5rem;
+  height: 100vh;
+
+}
+
+
 
 .chat-whole::-webkit-scrollbar { width: 0 !important }
 
 .trash {
   align-self: flex-end;
+  
+}
+.btn-light {
+  background-color: white;
+
+  &:hover {
+    background-color: white;
+  }
 }
