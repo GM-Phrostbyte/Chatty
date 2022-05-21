@@ -66,8 +66,8 @@ function ChatContact(props) {
 
   console.log('chatcontactran')
   return (
-      <div className='contact'>
-        <button>
+      <div className='d-flex'>
+        <button className='contact d-flex'>
           <p>{details.name}</p>
           <p>{details.lastMessage}</p>
           <p>{time}</p>
