@@ -5,7 +5,7 @@ const auth = firebase.auth();
 const firestore = firebase.firestore();
 const usersRef = firestore.collection('users');
 
-function ChatList(props) {
+function ChatList({ changeChatId }) {
   const [chatList, setChatList] = useState([]);
 
   useEffect(() => {
@@ -22,22 +22,25 @@ function ChatList(props) {
       (querySnapshot) => {
         contacts = [];
         querySnapshot.forEach((doc) => {
-          const data = doc.data();
+          const id = doc.id;
+          const data = {...doc.data(), id};
           // if time is null
           if (!data.time && doc.metadata.hasPendingWrites) {
             data.time = firebase.firestore.Timestamp.now();
           }
           contacts.push(data);
+          // console.log(data);
+          // console.log(doc.id);
         });
 
         setChatList(contacts);
-        console.log(contacts);
+        // console.log(contacts);
       });
   }
 
   return (
     <div className="ChatList">
-      <main>{chatList.map(contact => <ChatContact key={contact.email} details={contact}/> )}</main>
+      <main>{chatList.map(contact => <ChatContact changeChatId={changeChatId} key={contact.email} details={contact}/> )}</main>
     </div> 
   );
 }
@@ -60,14 +63,19 @@ const getTime = (messageTime) => {
   }
 }
 
-function ChatContact(props) {
-  const details = props.details;
+function ChatContact({ details, changeChatId, key}) {
   const time = getTime(details.time);
 
   console.log('chatcontactran')
+  // console.log(details);
+
+  const handleChatSelect = () => {
+    changeChatId(details.id, details.name);
+  }
+
   return (
       <div className='contact'>
-        <button>
+        <button onClick={handleChatSelect}>
           <p>{details.name}</p>
           <p>{details.lastMessage}</p>
           <p>{time}</p>
