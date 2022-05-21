@@ -1,8 +1,5 @@
 import firebase from '../constants/FirebaseConfig.js';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
 import React, { useState, useEffect, useRef, Component} from 'react';
-import { signOut } from 'firebase/auth';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import ChatList from './ChatList'
@@ -25,12 +22,11 @@ function Header() {
     }, []);
 
     const getName = async() => {
-        const email = auth.currentUser.email;
-        const snapshot = await usersRef.doc(email).get(); 
-        setName(snapshot.data().name);
+         const email = auth.currentUser.email;
+         const snapshot = await usersRef.doc(email).get(); 
+         setName(snapshot.data().name);
     }
    
-
     return (
         <div className='container bg-secondary'>
             <div className="header container-sm d-flex justify-content-start align-items-center">
@@ -75,7 +71,6 @@ function ChatPanel(props) {
     setErrors('');
   }
 
-
   const validateForm = async () => {
 
     const myEmail = auth.currentUser.email;
@@ -108,7 +103,7 @@ function ChatPanel(props) {
     const myName = snapshot.data().name;
     const newFriendName = snapshot2.data().name;
     const time = firebase.firestore.FieldValue.serverTimestamp();
-    console.log(time);
+
     console.log(errors);
 
     await chatID.collection('users').doc('emails').set({
@@ -131,7 +126,8 @@ function ChatPanel(props) {
       name: myName,
       email: myEmail
     });
-  }
+
+   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -145,6 +141,7 @@ function ChatPanel(props) {
       resetForm();
       props.onHide();
     }
+
   }
 
   return (

@@ -5,24 +5,11 @@ const auth = firebase.auth();
 const firestore = firebase.firestore();
 const usersRef = firestore.collection('users');
 
-function ChatContact(props) {
-  const details = props.details;
-  console.log('stuffhappened')
-  return (
-      <div className='contact'>
-        <button>
-          <p>{details.name}</p>
-          <p>{details.lastMessage}</p>
-          <p>{details.isRead}</p>   
-        </button>
-      </div>
-  );
-}
-
 function ChatList(props) {
   const [chatList, setChatList] = useState([]);
 
   useEffect(() => {
+    console.log('effectran')
     getChats();
   }, []); // WARNING: may cause infinite loop
 
@@ -41,6 +28,40 @@ function ChatList(props) {
     <div className="ChatList">
       <main>{chatList.map(contact => <ChatContact key={contact.email} details={contact}/> )}</main>
     </div> 
+  );
+}
+
+const getTime = (messageTime) => {
+  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const curTime = new Date();
+  const msgTime = messageTime.toDate();
+  const msgDateString = msgTime.toLocaleDateString();
+
+  const msDiff = curTime - msgTime; // difference in times in milliseconds
+  const dayDiff = msDiff/1000/60/60/24; // inaccurate: not exactly 24hr/day
+
+  if (curTime.toLocaleDateString() === msgDateString) { // same day returns time
+    return msgTime.toLocaleTimeString('en-US', {timeStyle: 'short'});
+  } else if (dayDiff <= 7) { // same week returns day as a name
+    return days[msgTime.getDay()];
+  } else { // more than a week returns date
+    return msgDateString;
+  }
+}
+
+function ChatContact(props) {
+  const details = props.details;
+  const time = getTime(details.time);
+
+  console.log('chatcontactran')
+  return (
+      <div className='contact'>
+        <button>
+          <p>{details.name}</p>
+          <p>{details.lastMessage}</p>
+          <p>{time}</p>
+        </button>
+      </div>
   );
 }
 
