@@ -1,5 +1,8 @@
 import firebase from '../constants/FirebaseConfig.js';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 import React, { useState, useEffect, useRef, Component} from 'react';
+import { signOut } from 'firebase/auth';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import ChatList from './ChatList'
@@ -22,13 +25,13 @@ function Header({ update, changeChatId, makeUpdate }) {
     }, [update]);
 
     const getName = async() => {
-         const email = auth.currentUser.email;
-         const snapshot = await usersRef.doc(email).get(); 
-         setName(snapshot.data().name);
+        const email = auth.currentUser.email;
+        const snapshot = await usersRef.doc(email).get(); 
+        setName(snapshot.data().name);
     }
-   
+    
     return (
-        <div className='container-fluid bg-secondary'>
+        <div className='headerDiv container bg-secondary d-flex flex-column justify-content-start align-items-start'>
             <div className="header container-sm d-flex justify-content-start align-items-center">
                 <div className="nameBox flex-grow-1 d-flex align-items-center">
                   <h1 className="displayName flex-grow-1">{name}</h1>   
@@ -54,7 +57,7 @@ function Header({ update, changeChatId, makeUpdate }) {
               show={logOutShow}
               onHide={() => setLogOutShow(false)}
             />
-   <ChatList changeChatId={changeChatId}/>
+            <ChatList changeChatId={changeChatId}/>
         </div>
     );
 }
@@ -69,6 +72,7 @@ function ChatPanel(props) {
     setNewFriendEmail('');
     setErrors('');
   }
+
 
   const validateForm = async () => {
 
@@ -102,7 +106,7 @@ function ChatPanel(props) {
     const myName = snapshot.data().name;
     const newFriendName = snapshot2.data().name;
     const time = firebase.firestore.FieldValue.serverTimestamp();
-
+    console.log(time);
     console.log(errors);
 
     await chatID.collection('users').doc('emails').set({
@@ -125,8 +129,7 @@ function ChatPanel(props) {
       name: myName,
       email: myEmail
     });
-
-   }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -140,7 +143,6 @@ function ChatPanel(props) {
       resetForm();
       props.onHide();
     }
-
   }
 
   return (

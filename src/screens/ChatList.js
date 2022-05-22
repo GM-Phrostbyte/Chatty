@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import firebase from '../constants/FirebaseConfig.js';
+//import LetterProfile from '../App';
 
 const auth = firebase.auth();
 const firestore = firebase.firestore();
@@ -39,7 +40,7 @@ function ChatList({ changeChatId }) {
   }
 
   return (
-    <div className="ChatList">
+    <div className="ChatList d-flex flex-column">
       <main>{chatList.map(contact => <ChatContact changeChatId={changeChatId} key={contact.email} details={contact}/> )}</main>
     </div> 
   );
@@ -69,19 +70,45 @@ function ChatContact({ details, changeChatId, key}) {
   console.log('chatcontactran')
   // console.log(details);
 
+  const lastMessage = details.isRead ? 'readMessage' : 'unreadMessage';
+  const visible = details.isRead ? 'notVisible' : '';
+
   const handleChatSelect = () => {
     changeChatId(details.id, details.name);
   }
 
   return (
-      <div className='contact'>
-        <button onClick={handleChatSelect}>
-          <p>{details.name}</p>
-          <p>{details.lastMessage}</p>
-          <p>{time}</p>
-        </button>
-      </div>
+      <button className='d-flex flex-row contactList'>     
+        <div className='contact d-flex flex-row justify-content-start align-items-center' onClick={handleChatSelect}>
+          <div>
+            <LetterProfile name={details.name}/>
+          </div>
+          <div className="info d-flex flex-column align-items-start">
+            <div className="topInfo d-flex flex-row">
+              <p className="flex-grow-1 contactName">{details.name}</p>
+              <p className="time">{time}</p>
+            </div>
+            <div className="bottomInfo d-flex flex-row">
+              <p className={`flex-grow-1 ${lastMessage}`}>chicken nuggets is yummy</p>
+              <div className= {`readDot ${visible}`}></div>
+            </div>
+          </div>
+          </div>
+      </button>
   );
 }
+
+// {details.lastMessage}
+
+function LetterProfile({name}) {
+  const firstLetter = name.charAt(0).toUpperCase();
+
+  return (
+    <div className="letter-icon d-flex">
+      <span>{firstLetter}</span>
+    </div>
+  );
+}
+
 
 export default ChatList;

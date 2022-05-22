@@ -33,7 +33,7 @@ function App() {
   return (
     <div className="App">
       {user ? (
-        <div className=" container-fluid d-flex flex-row">
+        <div className="AppDiv container-fluid d-flex flex-row">
           <div className="col-4">
             <Header
               update={siblingChange}
@@ -104,11 +104,14 @@ function ChatRoom({
 
     const { uid } = auth.currentUser;
 
-    await messagesRef.add({
+    const newMessage = messagesRef.doc();
+
+    await newMessage.set({
       text: formValue,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       uid,
-    });
+      id: newMessage.id
+    })
 
     setFormValue("");
     dummy.current.scrollIntoView({ behavior: "smooth" });
@@ -176,12 +179,12 @@ function ChatName({ name, onClick }) {
     <div className="chatname container px-2 py-3">
       <div className="row">
         <div className="col-1">
-          <div className="letter-icon d-flex">
-            <span>{firstLetter}</span>
-          </div>
+          <LetterProfile
+            name={name}
+          />
         </div>
-        <div className="col-8">
-          <p className="h2">{name}</p>
+        <div className="col-8 d-flex align-items-center">
+          <p className="name h2">{name}</p>
         </div>
         <div className="col-3 d-flex flex-row-reverse">
           <button
@@ -203,6 +206,16 @@ function ChatName({ name, onClick }) {
           </button>
         </div>
       </div>
+    </div>
+  );
+}
+
+function LetterProfile({name}) {
+  const firstLetter = name.charAt(0).toUpperCase();
+
+  return (
+    <div className="letter-icon d-flex">
+      <span>{firstLetter}</span>
     </div>
   );
 }
