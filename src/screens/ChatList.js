@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import firebase from '../constants/FirebaseConfig.js';
+//import LetterProfile from '../App';
 
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 const usersRef = firestore.collection('users');
 
-function ChatList(props) {
+function ChatList({ changeChatId }) {
   const [chatList, setChatList] = useState([]);
 
   useEffect(() => {
@@ -22,22 +23,25 @@ function ChatList(props) {
       (querySnapshot) => {
         contacts = [];
         querySnapshot.forEach((doc) => {
-          const data = doc.data();
+          const id = doc.id;
+          const data = {...doc.data(), id};
           // if time is null
           if (!data.time && doc.metadata.hasPendingWrites) {
             data.time = firebase.firestore.Timestamp.now();
           }
           contacts.push(data);
+          // console.log(data);
+          // console.log(doc.id);
         });
 
         setChatList(contacts);
-        console.log(contacts);
+        // console.log(contacts);
       });
   }
 
   return (
-    <div className="ChatList">
-      <main>{chatList.map(contact => <ChatContact key={contact.email} details={contact}/> )}</main>
+    <div className="ChatList d-flex flex-column">
+      <main>{chatList.map(contact => <ChatContact changeChatId={changeChatId} key={contact.email} details={contact}/> )}</main>
     </div> 
   );
 }
@@ -60,20 +64,51 @@ const getTime = (messageTime) => {
   }
 }
 
-function ChatContact(props) {
-  const details = props.details;
+function ChatContact({ details, changeChatId, key}) {
   const time = getTime(details.time);
 
   console.log('chatcontactran')
+  // console.log(details);
+
+  const lastMessage = details.isRead ? 'readMessage' : 'unreadMessage';
+  const visible = details.isRead ? 'notVisible' : '';
+
+  const handleChatSelect = () => {
+    changeChatId(details.id, details.name);
+  }
+
   return (
-      <div className='d-flex'>
-        <button className='contact d-flex'>
-          <p>{details.name}</p>
-          <p>{details.lastMessage}</p>
-          <p>{time}</p>
-        </button>
-      </div>
+      <button className='d-flex flex-row contactList'>     
+        <div className='contact d-flex flex-row justify-content-start align-items-center' onClick={handleChatSelect}>
+          <div>
+            <LetterProfile name={details.name}/>
+          </div>
+          <div className="info d-flex flex-column align-items-start">
+            <div className="topInfo d-flex flex-row">
+              <p className="flex-grow-1 contactName">{details.name}</p>
+              <p className="time">{time}</p>
+            </div>
+            <div className="bottomInfo d-flex flex-row">
+              <p className={`flex-grow-1 ${lastMessage}`}>chicken nuggets is yummy</p>
+              <div className= {`readDot ${visible}`}></div>
+            </div>
+          </div>
+          </div>
+      </button>
   );
 }
+
+// {details.lastMessage}
+
+function LetterProfile({name}) {
+  const firstLetter = name.charAt(0).toUpperCase();
+
+  return (
+    <div className="letter-icon d-flex">
+      <span>{firstLetter}</span>
+    </div>
+  );
+}
+
 
 export default ChatList;

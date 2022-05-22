@@ -15,14 +15,14 @@ const auth = firebase.auth();
 const firestore = firebase.firestore();
 const usersRef = firestore.collection("users");
 
-function Header() {
+function Header({ update, changeChatId, makeUpdate }) {
     const [name, setName] = useState('');
     const [logOutShow, setLogOutShow] = useState(false);
     const [newChatShow, setNewChatShow] = useState(false);
 
     useEffect(() => {
         getName();
-    }, []);
+    }, [update]);
 
     const getName = async() => {
         const email = auth.currentUser.email;
@@ -57,8 +57,7 @@ function Header() {
               show={logOutShow}
               onHide={() => setLogOutShow(false)}
             />
-
-            <ChatList />
+            <ChatList changeChatId={changeChatId}/>
         </div>
     );
 }

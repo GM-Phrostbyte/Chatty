@@ -1,10 +1,12 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Header from "./screens/Header";
 import firebase from "./constants/FirebaseConfig.js";
 
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import SignIn from "./screens/SignIn";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 const auth = firebase.auth();
 const firestore = firebase.firestore();
@@ -12,13 +14,47 @@ const firestore = firebase.firestore();
 // main App component
 function App() {
   const [user] = useAuthState(auth);
+  const [siblingChange, setSiblingChange] = useState(true);
+  const [currChatId, setCurrChatId] = useState(0);
+  const [currChatName, setCurrChatName] = useState("Anything");
+
+  const changeChatId = (newId, name) => {
+    setCurrChatId(newId);
+    setCurrChatName(name);
+  };
+
+  const returnToEmpty = () => {
+    setCurrChatId(0);
+  };
+  const makeUpdate = () => {
+    setSiblingChange(!siblingChange);
+  };
 
   return (
     <div className="App">
       {user ? (
         <div className="AppDiv container-fluid d-flex flex-row">
-          <Header />
-          <ChatRoom />
+          <div className="col-4">
+            <Header
+              update={siblingChange}
+              makeUpdate={makeUpdate}
+              changeChatId={changeChatId}
+            />
+          </div>
+
+          <div className="col-8 chat-background">
+            {currChatId ? (
+              <ChatRoom
+                update={siblingChange}
+                makeUpdate={makeUpdate}
+                currChatId={currChatId}
+                currentName={currChatName}
+                returnToEmpty={returnToEmpty}
+              />
+            ) : (
+              <EmptyChatRoom />
+            )}
+          </div>
         </div>
       ) : (
         <SignIn auth={auth} />
@@ -27,13 +63,38 @@ function App() {
   );
 }
 
-function ChatRoom(props) {
+function EmptyChatRoom() {
+  return (
+    <main className="container-fluid d-flex flex-column chat-whole align-items-center justify-content-center ">
+      <div>
+        <span>Select or add a chat to get started!</span>
+      </div>
+    </main>
+  );
+}
+
+function ChatRoom({
+  update,
+  currentName,
+  makeUpdate,
+  currChatId,
+  returnToEmpty,
+}) {
   const dummy = useRef();
-  const messagesRef = firestore.collection("messages");
+  const messagesRef = firestore
+    .collection("chats")
+    .doc(currChatId)
+    .collection("messages");
   const query = messagesRef.orderBy("createdAt").limitToLast(25);
   const [messages] = useCollectionData(query, { idField: "id" });
 
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+
   const [formValue, setFormValue] = useState("");
+
+  useEffect(() => {
+    console.log(currChatId);
+  }, [update, currChatId]);
 
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -61,26 +122,40 @@ function ChatRoom(props) {
   };
 
   return (
-    <main className="container-fluid d-flex flex-column chat-whole border border-primary">
-      <ChatName name={props.currentName} />
-      <div className="container d-flex flex-column chat-container">
+    <main className="container-fluid d-flex flex-column chat-whole">
+      <ChatName
+        name={currentName}
+        onClick={() => setDeleteModalVisible(true)}
+      />
+      <div className="container d-flex flex-column chat-container px-20">
         {messages &&
           messages.map((msg) => <ChatMessage key={msg.id} message={msg} />)}
         <div ref={dummy}></div>
       </div>
 
+      <DeleteModal
+        show={deleteModalVisible}
+        onHide={() => setDeleteModalVisible(false)}
+        currChatId={currChatId}
+        returnToEmpty={returnToEmpty}
+        makeUpdate={makeUpdate}
+      />
+
       <div>
-        <form onSubmit={sendMessage} className="py-3 form-actions d-flex align-items-center">
+        <form
+          onSubmit={sendMessage}
+          className="py-3 form-actions d-flex align-items-center"
+        >
           <input
             value={formValue}
             onChange={onInputText}
-            className="form-control chat-input"
+            className="form-control chat-input px-10"
             placeholder="Message..."
           ></input>
           <button className={"send-btn btn p-0 "} type="submit">
             <svg
-              width="50"
-              height="50"
+              width="63"
+              height="63"
               viewBox="0 0 63 63"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
@@ -97,36 +172,119 @@ function ChatRoom(props) {
   );
 }
 
-function ChatName({ name }) {
+function ChatName({ name, onClick }) {
   const firstLetter = name.charAt(0).toUpperCase();
 
   return (
     <div className="chatname container px-2 py-3">
       <div className="row">
         <div className="col-1">
-          <div className="letter-icon d-flex">
-            <span>{firstLetter}</span>
-          </div>
+          <LetterProfile
+            name={name}
+          />
         </div>
-        <div className="col-8">
-          <p className="h2">{name}</p>
+        <div className="col-8 d-flex align-items-center">
+          <p className="name h2">{name}</p>
         </div>
         <div className="col-3 d-flex flex-row-reverse">
-          <button className="btn btn-light border-0 trash align-self-center">
+          <button
+            className="btn btn-light bg-none border-0 trash align-self-center"
+            onClick={onClick}
+          >
             <svg
+              width="40"
+              height="40"
+              viewBox="0 0 40 40"
+              fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              className="bi bi-trash-fill"
-              viewBox="0 0 16 16"
             >
-              <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
+              <path
+                d="M20 2.85715C21.4661 2.85715 22.876 3.42063 23.9383 4.43104C25.0006 5.44145 25.6338 6.82149 25.7072 8.28572L25.7143 8.57143H32.8571C33.2213 8.57184 33.5715 8.71126 33.8362 8.96122C34.101 9.21117 34.2603 9.55279 34.2817 9.91628C34.303 10.2798 34.1848 10.6377 33.9511 10.9169C33.7174 11.1961 33.3859 11.3756 33.0243 11.4186L32.8571 11.4286H31.6443L29.9586 32.2186C29.8498 33.5601 29.2401 34.8116 28.2506 35.724C27.2612 36.6364 25.9645 37.143 24.6186 37.1429H15.3814C14.0355 37.143 12.7388 36.6364 11.7494 35.724C10.7599 34.8116 10.1502 33.5601 10.0414 32.2186L8.35429 11.4286H7.14287C6.79296 11.4285 6.45524 11.3001 6.19376 11.0676C5.93228 10.835 5.76523 10.5146 5.72429 10.1671L5.71429 10C5.71434 9.6501 5.8428 9.31238 6.07532 9.0509C6.30783 8.78942 6.62822 8.62237 6.97572 8.58143L7.14287 8.57143H14.2857C14.2857 7.05591 14.8878 5.60246 15.9594 4.53082C17.031 3.45919 18.4845 2.85715 20 2.85715ZM16.7857 16.0714C16.5268 16.0714 16.2767 16.1652 16.0815 16.3354C15.8864 16.5056 15.7595 16.7406 15.7243 16.9971L15.7143 17.1429V28.5714L15.7243 28.7171C15.7596 28.9736 15.8865 29.2086 16.0816 29.3787C16.2768 29.5488 16.5269 29.6425 16.7857 29.6425C17.0446 29.6425 17.2947 29.5488 17.4898 29.3787C17.6849 29.2086 17.8119 28.9736 17.8472 28.7171L17.8572 28.5714V17.1429L17.8472 16.9971C17.8119 16.7406 17.685 16.5056 17.4899 16.3354C17.2948 16.1652 17.0446 16.0714 16.7857 16.0714ZM23.2143 16.0714C22.9554 16.0714 22.7052 16.1652 22.5101 16.3354C22.315 16.5056 22.1881 16.7406 22.1529 16.9971L22.1429 17.1429V28.5714L22.1529 28.7171C22.1881 28.9736 22.3151 29.2086 22.5102 29.3787C22.7053 29.5488 22.9554 29.6425 23.2143 29.6425C23.4732 29.6425 23.7233 29.5488 23.9184 29.3787C24.1135 29.2086 24.2404 28.9736 24.2757 28.7171L24.2857 28.5714V17.1429L24.2757 16.9971C24.2405 16.7406 24.1136 16.5056 23.9185 16.3354C23.7234 16.1652 23.4732 16.0714 23.2143 16.0714ZM20 5.71429C19.2792 5.71406 18.5849 5.9863 18.0564 6.47643C17.5278 6.96656 17.2041 7.63835 17.15 8.35715L17.1429 8.57143H22.8572L22.85 8.35715C22.7959 7.63835 22.4722 6.96656 21.9436 6.47643C21.4151 5.9863 20.7208 5.71406 20 5.71429Z"
+                fill="#D1D1D1"
+              />
             </svg>
           </button>
         </div>
       </div>
     </div>
+  );
+}
+
+function LetterProfile({name}) {
+  const firstLetter = name.charAt(0).toUpperCase();
+
+  return (
+    <div className="letter-icon d-flex">
+      <span>{firstLetter}</span>
+    </div>
+  );
+}
+
+function DeleteModal(props) {
+  const deleteChat = (currChatId) => {
+    const email = auth.currentUser.email;
+
+    firestore
+      .collection("users")
+      .doc(email)
+      .collection("chats")
+      .doc(currChatId)
+      .delete()
+      .then(() => {
+        console.log("Document successfully deleted!");
+      })
+      .catch((error) => {
+        console.error("Error removing document: ", error);
+      });
+
+    firestore
+      .collection("chats")
+      .doc(currChatId)
+      .delete()
+      .then(() => {
+        console.log("Document successfully deleted!");
+      })
+      .catch((error) => {
+        console.error("Error removing document: ", error);
+      });
+    props.makeUpdate();
+    props.returnToEmpty();
+  };
+
+  return (
+    <Modal
+      {...props}
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+      contentClassName="logOutPanel"
+      dialogClassName="d-flex justify-content-center align-items-center"
+    >
+      <Modal.Header className="modalHeader d-flex justify-content-center align-items-center">
+        <Modal.Title
+          className="modalHeaderText"
+          id="contained-modal-title-vcenter"
+        >
+          Are you sure?
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <form className="form-actions d-flex justify-content-center align-items-center">
+          <div className="theFunniShape">
+            <button
+              className="signOut btn btn-primary"
+              onClick={() => deleteChat(props.currChatId)}
+            >
+              DELETE
+            </button>
+          </div>
+          <div className="theFunniShape">
+            <Button className="return btn btn-primary" onClick={props.onHide}>
+              CANCEL
+            </Button>
+          </div>
+        </form>
+      </Modal.Body>
+    </Modal>
   );
 }
 

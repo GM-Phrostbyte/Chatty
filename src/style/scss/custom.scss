@@ -4,6 +4,7 @@ $auth-card-height: 30rem;
 $primary: #a168db;
 $secondary: #f6f6f6;
 $body-color: #656565;
+$light-color: #979797;
 $full-height: 100vh;
 $gradient: linear-gradient(
     127.13deg,
@@ -33,7 +34,6 @@ $auth-input-background: #eeeeee;
 
 // header page
 $modal-border-radius: 36px;
-$header-width: 31rem;
 $logout-width: 26rem;
 $newchat-width: 35rem;
 $error-size: 0.9rem;
@@ -107,6 +107,13 @@ $chat-bubble-sent: $primary;
 // Import Bootstrap and its default variables
 @import "~bootstrap/scss/bootstrap.scss";
 
+.chat-list-side {
+  background-color: #E5E5E5;
+}
+
+.chat-background {
+  background-color: white;
+}
 .btn {
   border-radius: $button-border-radius;
 
@@ -255,11 +262,11 @@ $chat-bubble-sent: $primary;
 .headerDiv {
   padding: 0;
   margin: 0;
+  background-color: blue;
 }
 
 .header {
   padding-left: 0px;
-  width: $header-width; //will be changed ^ 33%?
   padding-top: 3rem;
   margin-left: 0px;
 
@@ -288,6 +295,7 @@ $chat-bubble-sent: $primary;
     @include circleButton();
     background-color: $primary;
     color: $secondary;
+    margin-right: 1.5rem;
   }
 }
 
@@ -370,6 +378,8 @@ $chat-bubble-sent: $primary;
     @include modalButton("gray");
   }
 }
+
+
 // Actual Chat
 
 // messages
@@ -409,6 +419,7 @@ $chat-bubble-sent: $primary;
 .chat-container {
   height: $chat-container-height;
   overflow-x: hidden;
+  border-top: 1px solid #CFCFCF;
 }
 
 .letter-icon {
@@ -427,12 +438,17 @@ $chat-bubble-sent: $primary;
   }
 }
 
+.name {
+  font-size: 1.5rem;
+}
+
 .chat-input {
   border-radius: 42px;
   background-color: #ECECEC;
   color: #AAAAAA;
   border: none;
-  height: 35px;
+  height: 45px;
+  padding-left: 2rem;
 }
 
 .send-btn {
@@ -441,13 +457,19 @@ $chat-bubble-sent: $primary;
 
 .chat-container {
   overflow-y: scroll;
+  
 }
 
+.chat-container::-webkit-scrollbar { 
+  display: none;  /* Safari and Chrome */
+}
 .chat-whole {
-  padding-top: 3rem;
+  padding-top: 1.5rem;
   height: 100vh;
   background-color: white;
 }
+
+
 
 .chat-whole::-webkit-scrollbar { width: 0 !important }
 
@@ -455,10 +477,84 @@ $chat-bubble-sent: $primary;
   align-self: flex-end;
 }
 
+.btn-light {
+  background-color: white;
+
+  &:hover {
+    background-color: white;
+  }
+}
 
 // ChatList
+.ChatList {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.contactList {
+  //border: 1px solid black;
+  width: 100%;
+  padding: 1rem 1rem;
+  background-color: $secondary;
+  border: none;
+}
 
 .contact {
+  width: 100%;
   border: none;
+  background-color: $secondary;
 
+  .info {
+    width: 100%;
+    margin-left: 1rem;
+
+    .topInfo {
+      width: 100%;
+      margin-bottom: -1rem;
+
+      .contactName {
+        text-align: left;
+        font-size: 1.2rem;
+        color: $primary;
+        font-weight: 600;
+      }
+      
+      .time {
+        color: $light-color;
+        font-weight: 400;
+        font-size: .9rem;
+      }
+    }
+
+    .bottomInfo {
+      margin-bottom: -1rem;
+      width: 100%;
+
+      .readMessage {
+        color: $light-color;
+        font-size: .9rem;
+        font-weight: 400;
+        text-align: left;
+      }
+
+      .unreadMessage {
+        color: #686868;
+        font-size: .9rem;
+        font-weight: 600;
+        text-align: left;
+      }
+
+      .readDot {
+        width: .7rem;
+        height: .7rem;
+        border-radius: 50%;
+        background-color: #C9A3F0;
+      }
+
+      .notVisible {
+        opacity: 0;
+        visibility: 0;
+      }
+    }
+  }
 }
