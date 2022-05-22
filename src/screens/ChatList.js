@@ -89,7 +89,7 @@ function ChatContact({ details, changeChatId, key}) {
               <p className="time">{time}</p>
             </div>
             <div className="bottomInfo d-flex flex-row">
-              <p className={`flex-grow-1 ${lastMessage}`}>chicken nuggets is yummy</p>
+              <p className={`flex-grow-1 ${lastMessage}`}>{details.lastMessage}</p>
               <div className= {`readDot ${visible}`}></div>
             </div>
           </div>
@@ -97,8 +97,6 @@ function ChatContact({ details, changeChatId, key}) {
       </button>
   );
 }
-
-// {details.lastMessage}
 
 function LetterProfile({name}) {
   const firstLetter = name.charAt(0).toUpperCase();
