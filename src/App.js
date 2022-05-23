@@ -34,7 +34,7 @@ function App() {
     <div className="App">
       {user ? (
         <div className="AppDiv container-fluid d-flex flex-row">
-          <div className="col-4">
+          <div className="col-3">
             <Header
               update={siblingChange}
               makeUpdate={makeUpdate}
@@ -42,7 +42,7 @@ function App() {
             />
           </div>
 
-          <div className="col-8 chat-background">
+          <div className="col-9 chat-background">
             {currChatId ? (
               <ChatRoom
                 update={siblingChange}

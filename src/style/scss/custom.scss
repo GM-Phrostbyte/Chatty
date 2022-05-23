@@ -23,8 +23,8 @@ $primary-button-hover: #915dc6;
 
 // auth pages
 $auth-header-color: white;
-$auth-card-header-height: 6rem;
-$auth-card-header-top-padding: 2rem;
+$auth-card-header-height: 8rem;
+$auth-card-header-top-padding: 3rem;
 $auth-small-text-color: #919191;
 $auth-google-text-color: $body-color;
 $auth-border-radius: 36px;
@@ -40,7 +40,7 @@ $error-size: 0.9rem;
 
 // chat
 $chat-container-height: 50rem;
-$chat-bubble-received: #E9E9E9;
+$chat-bubble-received: #e9e9e9;
 $chat-bubble-sent: $primary;
 
 // $theme-colors: (
@@ -108,7 +108,7 @@ $chat-bubble-sent: $primary;
 @import "~bootstrap/scss/bootstrap.scss";
 
 .chat-list-side {
-  background-color: #E5E5E5;
+  background-color: #e5e5e5;
 }
 
 .chat-background {
@@ -142,7 +142,6 @@ $chat-bubble-sent: $primary;
   }
 }
 
-
 // Sign In / Sign Up
 .card {
   z-index: 2;
@@ -164,10 +163,14 @@ $chat-bubble-sent: $primary;
     height: $auth-card-header-height;
     text-align: center;
     padding-top: $auth-card-header-top-padding;
+    border-bottom-left-radius: 40%;
+    border-bottom-right-radius: 40%;
 
     &:first-child {
       border-top-right-radius: $auth-border-radius;
       border-top-left-radius: $auth-border-radius;
+      border-bottom-left-radius: 40%;
+      border-bottom-right-radius: 40%;
     }
   }
   .btn {
@@ -315,14 +318,14 @@ $chat-bubble-sent: $primary;
     margin-left: 0.5rem;
     padding: 0;
     background-color: $primary;
-    outline:none;
-    border:none;
+    outline: none;
+    border: none;
     color: white;
-    transition: .2s ease-in-out;
+    transition: 0.2s ease-in-out;
 
     &:hover {
-      outline:none;
-      border:none;
+      outline: none;
+      border: none;
       transform: scale(1.3);
     }
   }
@@ -341,10 +344,9 @@ $chat-bubble-sent: $primary;
   margin-top: 3rem; // to remove ^
 
   .form-actions {
-
     input {
       @include inputField;
-      margin-bottom: .8rem;
+      margin-bottom: 0.8rem;
       width: 26rem;
     }
     .errors {
@@ -379,7 +381,6 @@ $chat-bubble-sent: $primary;
   }
 }
 
-
 // Actual Chat
 
 // messages
@@ -387,7 +388,7 @@ $chat-bubble-sent: $primary;
   display: flex;
   align-items: center;
   text-align: center;
-  vertical-align:middle;
+  vertical-align: middle;
   margin-top: 1rem;
   max-inline-size: 45%;
   word-break: break-all;
@@ -419,7 +420,7 @@ $chat-bubble-sent: $primary;
 .chat-container {
   height: $chat-container-height;
   overflow-x: hidden;
-  border-top: 1px solid #CFCFCF;
+  border-top: 1px solid #cfcfcf;
 }
 
 .letter-icon {
@@ -430,11 +431,10 @@ $chat-bubble-sent: $primary;
   align-items: center;
   justify-content: center;
 
-
   span {
     font-size: 24px;
     font-weight: 600;
-    color: #ECECEC;
+    color: #ececec;
   }
 }
 
@@ -444,24 +444,25 @@ $chat-bubble-sent: $primary;
 
 .chat-input {
   border-radius: 42px;
-  background-color: #ECECEC;
-  color: #AAAAAA;
+  background-color: #ececec;
+  color: #aaaaaa;
   border: none;
   height: 45px;
   padding-left: 2rem;
+  margin-left: 2rem;
+  margin-right: 4rem;
 }
 
 .send-btn {
-  margin-left: -3rem;
+  margin-left: -7rem;
 }
 
 .chat-container {
   overflow-y: scroll;
-  
 }
 
-.chat-container::-webkit-scrollbar { 
-  display: none;  /* Safari and Chrome */
+.chat-container::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
 }
 .chat-whole {
   padding-top: 1.5rem;
@@ -469,9 +470,9 @@ $chat-bubble-sent: $primary;
   background-color: white;
 }
 
-
-
-.chat-whole::-webkit-scrollbar { width: 0 !important }
+.chat-whole::-webkit-scrollbar {
+  width: 0 !important;
+}
 
 .trash {
   align-self: flex-end;
@@ -518,11 +519,11 @@ $chat-bubble-sent: $primary;
         color: $primary;
         font-weight: 600;
       }
-      
+
       .time {
         color: $light-color;
         font-weight: 400;
-        font-size: .9rem;
+        font-size: 0.9rem;
       }
     }
 
@@ -532,23 +533,23 @@ $chat-bubble-sent: $primary;
 
       .readMessage {
         color: $light-color;
-        font-size: .9rem;
+        font-size: 0.9rem;
         font-weight: 400;
         text-align: left;
       }
 
       .unreadMessage {
         color: #686868;
-        font-size: .9rem;
+        font-size: 0.9rem;
         font-weight: 600;
         text-align: left;
       }
 
       .readDot {
-        width: .7rem;
-        height: .7rem;
+        width: 0.7rem;
+        height: 0.7rem;
         border-radius: 50%;
-        background-color: #C9A3F0;
+        background-color: #c9a3f0;
       }
 
       .notVisible {
