@@ -21,6 +21,14 @@ function App() {
   const changeChatId = (newId, name) => {
     setCurrChatId(newId);
     setCurrChatName(name);
+    firestore
+      .collection("users")
+      .doc(auth.currentUser.email)
+      .collection("chats")
+      .doc(newId)
+      .update({
+        isRead: true,
+      });
   };
 
   const returnToEmpty = () => {
@@ -39,6 +47,7 @@ function App() {
               update={siblingChange}
               makeUpdate={makeUpdate}
               changeChatId={changeChatId}
+              currentChatId={currChatId}
             />
           </div>
 
@@ -73,6 +82,8 @@ function EmptyChatRoom() {
   );
 }
 
+
+
 function ChatRoom({
   update,
   currentName,
@@ -87,6 +98,7 @@ function ChatRoom({
     .collection("messages");
   const query = messagesRef.orderBy("createdAt").limitToLast(25);
   const [messages] = useCollectionData(query, { idField: "id" });
+  // const currEmail = auth.currentUser.email;
 
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
@@ -110,8 +122,24 @@ function ChatRoom({
       text: formValue,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       uid,
-      id: newMessage.id
-    })
+      id: newMessage.id,
+    });
+
+
+      // usersRef
+      //   .doc(currEmail)
+      //   .collection("chats")
+      //   .doc(currChatId)
+      //   .update({
+      //     isRead: true
+      //   });
+      
+      // const bothUsers = firestore.collection("chats").doc(currChatId).collection("users").doc("emails").data();
+      // const otherUser = bothUsers.userEmail1 === currEmail ? bothUsers.userEmail2 : bothUsers.userEmail1;
+
+      // usersRef.doc(otherUser).collection("chats").doc(currChatId).update({
+      //   isRead: false,
+      // });
 
     setFormValue("");
     dummy.current.scrollIntoView({ behavior: "smooth" });
@@ -173,15 +201,11 @@ function ChatRoom({
 }
 
 function ChatName({ name, onClick }) {
-  const firstLetter = name.charAt(0).toUpperCase();
-
   return (
     <div className="chatname container px-2 py-3">
       <div className="row">
         <div className="col-1">
-          <LetterProfile
-            name={name}
-          />
+          <LetterProfile name={name} />
         </div>
         <div className="col-8 d-flex align-items-center">
           <p className="name h2">{name}</p>
@@ -210,7 +234,7 @@ function ChatName({ name, onClick }) {
   );
 }
 
-function LetterProfile({name}) {
+function LetterProfile({ name }) {
   const firstLetter = name.charAt(0).toUpperCase();
 
   return (

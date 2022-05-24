@@ -15,13 +15,20 @@ const auth = firebase.auth();
 const firestore = firebase.firestore();
 const usersRef = firestore.collection("users");
 
-function Header({ update, changeChatId, makeUpdate }) {
+function Header({ update, changeChatId, makeUpdate, currentChatId}) {
     const [name, setName] = useState('');
     const [logOutShow, setLogOutShow] = useState(false);
     const [newChatShow, setNewChatShow] = useState(false);
 
     useEffect(() => {
         getName();
+        // usersRef.doc(auth.currentUser.email).collection("chats").doc(currentChatId).onSnapshot(
+        //   (doc) => {
+        //     doc.set({
+        //       ...{isRead: true}
+        //     });
+        //   }
+        // )
     }, [update]);
 
     const getName = async() => {
@@ -51,6 +58,7 @@ function Header({ update, changeChatId, makeUpdate }) {
             <ChatPanel
               show={newChatShow}
               onHide={() => setNewChatShow(false)}
+              currentChatId={currentChatId}
             />
 
             <LogOutPanel
@@ -129,7 +137,29 @@ function ChatPanel(props) {
       name: myName,
       email: myEmail
     });
-  }
+    
+
+    // listens to updated messages
+    chatID.collection('messages').onSnapshot(
+      (snapshot) => {
+        snapshot.docChanges().forEach((change) => { // there should only be one change
+          const {text, createdAt} = change.doc.data();
+          console.log(createdAt)
+
+          usersRef.doc(myEmail).collection('chats').doc(chatID.id).update({
+            lastMessage: text,
+            time: createdAt,
+            // isRead: props.currentChatId === chatID.id ? true : false
+          });
+
+          usersRef.doc(newFriendEmail).collection('chats').doc(chatID.id).update({
+            lastMessage: text,
+            time: createdAt,
+          /// isRead: false
+          });
+        });
+      });
+    }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
