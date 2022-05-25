@@ -173,7 +173,6 @@ function ChatRoom({
 }
 
 function ChatName({ name, onClick }) {
-  const firstLetter = name.charAt(0).toUpperCase();
 
   return (
     <div className="chatname container px-2 py-3">
