@@ -75,6 +75,11 @@ function ChatPanel(props) {
 
   const [newFriendEmail, setNewFriendEmail] = useState('');
   const [errors, setErrors] = useState('');
+  /*const [currChild, setCurrChild] = useState('chicken');
+
+  useEffect(() => {
+    setCurrChild(props.currentChatId);
+  }, [props.update]);*/
 
   const resetForm = () => {
     setNewFriendEmail('');
@@ -104,6 +109,9 @@ function ChatPanel(props) {
   const handleInputChange = (e) => {
     setNewFriendEmail(e.target.value);
   }
+
+  console.log('top-level check: ' + props.currentChatId);
+  //console.log('top-level check currChile: ' + currChild);
 
   const addData = async () => {
     const myEmail = auth.currentUser.email;
@@ -138,24 +146,32 @@ function ChatPanel(props) {
       email: myEmail
     });
     
-
+    console.log('chatpanel check: ' + props.currentChatId);
+    
     // listens to updated messages
     chatID.collection('messages').onSnapshot(
       (snapshot) => {
+        console.log('prop before: ' + props.currentChatId);
+
         snapshot.docChanges().forEach((change) => { // there should only be one change
           const {text, createdAt} = change.doc.data();
           console.log(createdAt)
 
+          let read = props.currentChatId === chatID.id ? true : false;
+
+          console.log('props: ' + props.currentChatId);
+          console.log('chatID: ' + chatID.id);
+
           usersRef.doc(myEmail).collection('chats').doc(chatID.id).update({
             lastMessage: text,
             time: createdAt,
-            // isRead: props.currentChatId === chatID.id ? true : false
+            isRead: read
           });
 
           usersRef.doc(newFriendEmail).collection('chats').doc(chatID.id).update({
             lastMessage: text,
             time: createdAt,
-          /// isRead: false
+            isRead: false
           });
         });
       });
@@ -165,6 +181,7 @@ function ChatPanel(props) {
     e.preventDefault();
     const errorsRet = await validateForm();
 
+    console.log('handleSubmit check: ' + props.currentChatId);
 
     // basically checking if there is an error or not
     if (!errorsRet) {
