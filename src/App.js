@@ -21,6 +21,22 @@ function App() {
   const changeChatId = (newId, name) => {
     setCurrChatId(newId);
     setCurrChatName(name);
+
+    firestore
+      .collection("users")
+      .doc(auth.currentUser.email)
+      .collection("chats")
+      .doc(newId)
+      .update({
+        isRead: true,
+      });
+    
+    firestore
+      .collection("users")
+      .doc(auth.currentUser.email)
+      .update({
+        currentChat: newId
+      });
   };
 
   const returnToEmpty = () => {
@@ -39,6 +55,7 @@ function App() {
               update={siblingChange}
               makeUpdate={makeUpdate}
               changeChatId={changeChatId}
+              currentChatId={currChatId}
             />
           </div>
 
@@ -73,6 +90,8 @@ function EmptyChatRoom() {
   );
 }
 
+
+
 function ChatRoom({
   update,
   currentName,
@@ -85,8 +104,10 @@ function ChatRoom({
     .collection("chats")
     .doc(currChatId)
     .collection("messages");
+  const usersRef = firestore.collection("users");
   const query = messagesRef.orderBy("createdAt").limitToLast(25);
   const [messages] = useCollectionData(query, { idField: "id" });
+  // const currEmail = auth.currentUser.email;
 
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
@@ -103,6 +124,7 @@ function ChatRoom({
     }
 
     const { uid } = auth.currentUser;
+    const userEmail = auth.currentUser.email;
 
     const newMessage = messagesRef.doc();
 
@@ -110,8 +132,33 @@ function ChatRoom({
       text: formValue,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       uid,
-      id: newMessage.id
-    })
+      id: newMessage.id,
+    });
+
+    await usersRef.doc(userEmail).collection('chats').doc(currChatId).update({
+      lastMessage: formValue,
+      time: firebase.firestore.FieldValue.serverTimestamp(),
+      isRead: true
+    });
+
+      
+      const bothUsers = await firestore.collection("chats").doc(currChatId).collection("users").doc("emails").get();
+      const otherUser = bothUsers.data().userEmail1 === userEmail ? bothUsers.data().userEmail2 : bothUsers.data().userEmail1;
+      const otherUserCurrChat = await usersRef.doc(otherUser).get();
+      let otherUserRead = false;
+
+      if (otherUserCurrChat.data().currentChat == currChatId) {
+        otherUserRead = true;
+      }
+
+      await usersRef.doc(otherUser).collection("chats").doc(currChatId).update({
+        lastMessage: formValue,
+        time: firebase.firestore.FieldValue.serverTimestamp(),
+        isRead: otherUserRead,
+      });
+
+      
+
 
     setFormValue("");
     dummy.current.scrollIntoView({ behavior: "smooth" });
@@ -173,15 +220,11 @@ function ChatRoom({
 }
 
 function ChatName({ name, onClick }) {
-  const firstLetter = name.charAt(0).toUpperCase();
-
   return (
     <div className="chatname container px-2 py-3">
       <div className="row">
         <div className="col-1">
-          <LetterProfile
-            name={name}
-          />
+          <LetterProfile name={name} />
         </div>
         <div className="col-8 d-flex align-items-center">
           <p className="name h2">{name}</p>
@@ -210,7 +253,7 @@ function ChatName({ name, onClick }) {
   );
 }
 
-function LetterProfile({name}) {
+function LetterProfile({ name }) {
   const firstLetter = name.charAt(0).toUpperCase();
 
   return (

@@ -64,7 +64,7 @@ const getTime = (messageTime) => {
   }
 }
 
-function ChatContact({ details, changeChatId, key}) {
+function ChatContact({ details, changeChatId}) {
   const time = getTime(details.time);
 
   console.log('chatcontactran')
