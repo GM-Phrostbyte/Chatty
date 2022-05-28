@@ -22,13 +22,6 @@ function Header({ update, changeChatId, makeUpdate, currentChatId}) {
 
     useEffect(() => {
         getName();
-        // usersRef.doc(auth.currentUser.email).collection("chats").doc(currentChatId).onSnapshot(
-        //   (doc) => {
-        //     doc.set({
-        //       ...{isRead: true}
-        //     });
-        //   }
-        // )
     }, [update]);
 
     const getName = async() => {
@@ -75,11 +68,7 @@ function ChatPanel(props) {
 
   const [newFriendEmail, setNewFriendEmail] = useState('');
   const [errors, setErrors] = useState('');
-  /*const [currChild, setCurrChild] = useState('chicken');
 
-  useEffect(() => {
-    setCurrChild(props.currentChatId);
-  }, [props.update]);*/
 
   const resetForm = () => {
     setNewFriendEmail('');
@@ -110,16 +99,13 @@ function ChatPanel(props) {
     setNewFriendEmail(e.target.value);
   }
 
-  console.log('top-level check: ' + props.currentChatId);
-  //console.log('top-level check currChile: ' + currChild);
-
   const addData = async () => {
     const myEmail = auth.currentUser.email;
     const chatID = firestore.collection('chats').doc();
-    const snapshot = await usersRef.doc(myEmail).get();
+    const snapshot1 = await usersRef.doc(myEmail).get();
     const snapshot2 = await usersRef.doc(newFriendEmail).get();
 
-    const myName = snapshot.data().name;
+    const myName = snapshot1.data().name;
     const newFriendName = snapshot2.data().name;
     const time = firebase.firestore.FieldValue.serverTimestamp();
     console.log(time);
@@ -145,36 +131,6 @@ function ChatPanel(props) {
       name: myName,
       email: myEmail
     });
-    
-    console.log('chatpanel check: ' + props.currentChatId);
-    
-    // listens to updated messages
-    chatID.collection('messages').onSnapshot(
-      (snapshot) => {
-        console.log('prop before: ' + props.currentChatId);
-
-        snapshot.docChanges().forEach((change) => { // there should only be one change
-          const {text, createdAt} = change.doc.data();
-          console.log(createdAt)
-
-          let read = props.currentChatId === chatID.id ? true : false;
-
-          console.log('props: ' + props.currentChatId);
-          console.log('chatID: ' + chatID.id);
-
-          usersRef.doc(myEmail).collection('chats').doc(chatID.id).update({
-            lastMessage: text,
-            time: createdAt,
-            isRead: read
-          });
-
-          usersRef.doc(newFriendEmail).collection('chats').doc(chatID.id).update({
-            lastMessage: text,
-            time: createdAt,
-            isRead: false
-          });
-        });
-      });
     }
 
   const handleSubmit = async (e) => {

@@ -21,6 +21,7 @@ function App() {
   const changeChatId = (newId, name) => {
     setCurrChatId(newId);
     setCurrChatName(name);
+
     firestore
       .collection("users")
       .doc(auth.currentUser.email)
@@ -28,6 +29,13 @@ function App() {
       .doc(newId)
       .update({
         isRead: true,
+      });
+    
+    firestore
+      .collection("users")
+      .doc(auth.currentUser.email)
+      .update({
+        currentChat: newId
       });
   };
 
@@ -96,6 +104,7 @@ function ChatRoom({
     .collection("chats")
     .doc(currChatId)
     .collection("messages");
+  const usersRef = firestore.collection("users");
   const query = messagesRef.orderBy("createdAt").limitToLast(25);
   const [messages] = useCollectionData(query, { idField: "id" });
   // const currEmail = auth.currentUser.email;
@@ -115,6 +124,7 @@ function ChatRoom({
     }
 
     const { uid } = auth.currentUser;
+    const userEmail = auth.currentUser.email;
 
     const newMessage = messagesRef.doc();
 
@@ -125,21 +135,30 @@ function ChatRoom({
       id: newMessage.id,
     });
 
+    await usersRef.doc(userEmail).collection('chats').doc(currChatId).update({
+      lastMessage: formValue,
+      time: firebase.firestore.FieldValue.serverTimestamp(),
+      isRead: true
+    });
 
-      // usersRef
-      //   .doc(currEmail)
-      //   .collection("chats")
-      //   .doc(currChatId)
-      //   .update({
-      //     isRead: true
-      //   });
       
-      // const bothUsers = firestore.collection("chats").doc(currChatId).collection("users").doc("emails").data();
-      // const otherUser = bothUsers.userEmail1 === currEmail ? bothUsers.userEmail2 : bothUsers.userEmail1;
+      const bothUsers = await firestore.collection("chats").doc(currChatId).collection("users").doc("emails").get();
+      const otherUser = bothUsers.data().userEmail1 === userEmail ? bothUsers.data().userEmail2 : bothUsers.data().userEmail1;
+      const otherUserCurrChat = await usersRef.doc(otherUser).get();
+      let otherUserRead = false;
 
-      // usersRef.doc(otherUser).collection("chats").doc(currChatId).update({
-      //   isRead: false,
-      // });
+      if (otherUserCurrChat.data().currentChat == currChatId) {
+        otherUserRead = true;
+      }
+
+      await usersRef.doc(otherUser).collection("chats").doc(currChatId).update({
+        lastMessage: formValue,
+        time: firebase.firestore.FieldValue.serverTimestamp(),
+        isRead: otherUserRead,
+      });
+
+      
+
 
     setFormValue("");
     dummy.current.scrollIntoView({ behavior: "smooth" });
