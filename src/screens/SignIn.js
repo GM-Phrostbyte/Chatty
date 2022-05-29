@@ -23,6 +23,7 @@ function SignIn(props) {
     // does this rewrite to db every login? that could be bad
     await usersRef.doc(`${userInfo.email}`).set({
       name: userInfo.name,
+      currentChat: ""
     });
   };
 
