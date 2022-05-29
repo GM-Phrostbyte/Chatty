@@ -119,22 +119,14 @@ function ChatRoom({
   };
 
   useEffect(() => {
-
-    if (ref.current) {
-      scrollToBottom();
-    }
+    scrollToBottom();
+    
     const chatID = firestore.collection('chats').doc(currChatId);
-    chatID.collection('messages').onSnapshot(
-      (snapshot) => {
+    chatID.collection('messages').onSnapshot(() => {
         count.current = count.current + 1;
         console.log('bruh count: '+ count.current);
-        scrollToBottom();
-        snapshot.docChanges().forEach(() => { // there should only be one change
-          console.log("A CHANGE =============");
-          scrollToBottom();
-        });
       });
-  }, [update, currChatId]);
+  }, [count.current]);
 
   const sendMessage = async (e) => {
     e.preventDefault();
