@@ -265,21 +265,31 @@ function LetterProfile({ name }) {
 
 function DeleteModal(props) {
   const deleteChat = (currChatId) => {
-    const email = auth.currentUser.email;
-
+    
     firestore
-      .collection("users")
-      .doc(email)
-      .collection("chats")
-      .doc(currChatId)
-      .delete()
-      .then(() => {
-        console.log("Document successfully deleted!");
-      })
-      .catch((error) => {
-        console.error("Error removing document: ", error);
+    .collection("chats")
+    .doc(currChatId)
+    .collection("users")
+    .doc("emails")
+    .get()
+    .then(doc => {
+      Object.values(doc.data()).forEach(email => {
+        firestore
+        .collection("users")
+        .doc(email)
+        .collection("chats")
+        .doc(currChatId)
+        .delete()
+        .then(() => {
+          console.log("Document successfully deleted!");
+        })
+        .catch((error) => {
+          console.error("Error removing document: ", error);
+        });
       });
+    });
 
+    
     firestore
       .collection("chats")
       .doc(currChatId)
