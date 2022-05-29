@@ -21,6 +21,22 @@ function App() {
   const changeChatId = (newId, name) => {
     setCurrChatId(newId);
     setCurrChatName(name);
+
+    firestore
+      .collection("users")
+      .doc(auth.currentUser.email)
+      .collection("chats")
+      .doc(newId)
+      .update({
+        isRead: true,
+      });
+    
+    firestore
+      .collection("users")
+      .doc(auth.currentUser.email)
+      .update({
+        currentChat: newId
+      });
   };
 
   const returnToEmpty = () => {
@@ -34,15 +50,16 @@ function App() {
     <div className="App">
       {user ? (
         <div className="AppDiv container-fluid d-flex flex-row">
-          <div className="col-4">
+          <div className="col-3">
             <Header
               update={siblingChange}
               makeUpdate={makeUpdate}
               changeChatId={changeChatId}
+              currentChatId={currChatId}
             />
           </div>
 
-          <div className="col-8 chat-background">
+          <div className="col-9 chat-background">
             {currChatId ? (
               <ChatRoom
                 update={siblingChange}
@@ -73,6 +90,8 @@ function EmptyChatRoom() {
   );
 }
 
+
+
 function ChatRoom({
   update,
   currentName,
@@ -80,13 +99,15 @@ function ChatRoom({
   currChatId,
   returnToEmpty,
 }) {
-  const dummy = useRef();
+  //const dummy = useRef();
   const messagesRef = firestore
     .collection("chats")
     .doc(currChatId)
     .collection("messages");
+  const usersRef = firestore.collection("users");
   const query = messagesRef.orderBy("createdAt").limitToLast(25);
   const [messages] = useCollectionData(query, { idField: "id" });
+  // const currEmail = auth.currentUser.email;
 
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
 
@@ -96,25 +117,70 @@ function ChatRoom({
     console.log(currChatId);
   }, [update, currChatId]);
 
+  const ref = useRef(null);
+
+  const scrollToBottom = () => {
+    ref.current.scrollIntoView({
+      behavior: "smooth",
+    });
+  };
+
+  useEffect(() => {
+    if (ref.current) {
+      scrollToBottom();
+    }
+    const chatID = firestore.collection('chats').doc(currChatId);
+    chatID.collection('messages').onSnapshot(
+      (snapshot) => {
+        snapshot.docChanges().forEach(() => { // there should only be one change
+          console.log("A CHANGE =============");
+          scrollToBottom();
+        });
+      });
+  }, [update, currChatId]);
+
   const sendMessage = async (e) => {
     e.preventDefault();
+
+    const { uid } = auth.currentUser;
+    const userEmail = auth.currentUser.email;
+    const newMessage = messagesRef.doc();
+    const bothUsers = await firestore.collection("chats").doc(currChatId).collection("users").doc("emails").get();
+    const otherUser = bothUsers.data().userEmail1 === userEmail ? bothUsers.data().userEmail2 : bothUsers.data().userEmail1;
+    const otherUserCurrChat = await usersRef.doc(otherUser).get();
+    let otherUserRead = false;
+
     if (formValue === "") {
       return;
     }
-
-    const { uid } = auth.currentUser;
-
-    const newMessage = messagesRef.doc();
 
     await newMessage.set({
       text: formValue,
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
       uid,
-      id: newMessage.id
-    })
+      id: newMessage.id,
+    });
+
+    await usersRef.doc(userEmail).collection('chats').doc(currChatId).update({
+      lastMessage: formValue,
+      time: firebase.firestore.FieldValue.serverTimestamp(),
+      isRead: true
+    });
+
+
+    if (otherUserCurrChat.data().currentChat == currChatId) {
+      otherUserRead = true;
+    }
+
+    await usersRef.doc(otherUser).collection("chats").doc(currChatId).update({
+      lastMessage: formValue,
+      time: firebase.firestore.FieldValue.serverTimestamp(),
+      isRead: otherUserRead,
+      });
 
     setFormValue("");
-    dummy.current.scrollIntoView({ behavior: "smooth" });
+    //dummy.current.scrollIntoView({ behavior: "smooth" });
+    //scrollToBottom();
   };
 
   const onInputText = (e) => {
@@ -130,7 +196,7 @@ function ChatRoom({
       <div className="container d-flex flex-column chat-container px-20">
         {messages &&
           messages.map((msg) => <ChatMessage key={msg.id} message={msg} />)}
-        <div ref={dummy}></div>
+        <div ref={ref}></div>
       </div>
 
       <DeleteModal
@@ -173,14 +239,11 @@ function ChatRoom({
 }
 
 function ChatName({ name, onClick }) {
-
   return (
     <div className="chatname container px-2 py-3">
       <div className="row">
         <div className="col-1">
-          <LetterProfile
-            name={name}
-          />
+          <LetterProfile name={name} />
         </div>
         <div className="col-8 d-flex align-items-center">
           <p className="name h2">{name}</p>
@@ -209,7 +272,7 @@ function ChatName({ name, onClick }) {
   );
 }
 
-function LetterProfile({name}) {
+function LetterProfile({ name }) {
   const firstLetter = name.charAt(0).toUpperCase();
 
   return (
@@ -221,20 +284,29 @@ function LetterProfile({name}) {
 
 function DeleteModal(props) {
   const deleteChat = (currChatId) => {
-    const email = auth.currentUser.email;
-
+    
     firestore
-      .collection("users")
-      .doc(email)
-      .collection("chats")
-      .doc(currChatId)
-      .delete()
-      .then(() => {
-        console.log("Document successfully deleted!");
-      })
-      .catch((error) => {
-        console.error("Error removing document: ", error);
+    .collection("chats")
+    .doc(currChatId)
+    .collection("users")
+    .doc("emails")
+    .get()
+    .then(doc => {
+      Object.values(doc.data()).forEach(email => {
+        firestore
+        .collection("users")
+        .doc(email)
+        .collection("chats")
+        .doc(currChatId)
+        .delete()
+        .then(() => {
+          console.log("Document successfully deleted!");
+        })
+        .catch((error) => {
+          console.error("Error removing document: ", error);
+        });
       });
+    });
 
     firestore
       .collection("chats")

@@ -15,7 +15,7 @@ const auth = firebase.auth();
 const firestore = firebase.firestore();
 const usersRef = firestore.collection("users");
 
-function Header({ update, changeChatId, makeUpdate }) {
+function Header({ update, changeChatId, makeUpdate, currentChatId}) {
     const [name, setName] = useState('');
     const [logOutShow, setLogOutShow] = useState(false);
     const [newChatShow, setNewChatShow] = useState(false);
@@ -51,6 +51,7 @@ function Header({ update, changeChatId, makeUpdate }) {
             <ChatPanel
               show={newChatShow}
               onHide={() => setNewChatShow(false)}
+              currentChatId={currentChatId}
             />
 
             <LogOutPanel
@@ -67,6 +68,7 @@ function ChatPanel(props) {
 
   const [newFriendEmail, setNewFriendEmail] = useState('');
   const [errors, setErrors] = useState('');
+
 
   const resetForm = () => {
     setNewFriendEmail('');
@@ -100,10 +102,10 @@ function ChatPanel(props) {
   const addData = async () => {
     const myEmail = auth.currentUser.email;
     const chatID = firestore.collection('chats').doc();
-    const snapshot = await usersRef.doc(myEmail).get();
+    const snapshot1 = await usersRef.doc(myEmail).get();
     const snapshot2 = await usersRef.doc(newFriendEmail).get();
 
-    const myName = snapshot.data().name;
+    const myName = snapshot1.data().name;
     const newFriendName = snapshot2.data().name;
     const time = firebase.firestore.FieldValue.serverTimestamp();
     console.log(time);
@@ -135,6 +137,7 @@ function ChatPanel(props) {
     e.preventDefault();
     const errorsRet = await validateForm();
 
+    console.log('handleSubmit check: ' + props.currentChatId);
 
     // basically checking if there is an error or not
     if (!errorsRet) {
