@@ -124,7 +124,6 @@ function ChatRoom({
     const chatID = firestore.collection('chats').doc(currChatId);
     chatID.collection('messages').onSnapshot(() => {
         count.current = count.current + 1;
-        console.log('bruh count: '+ count.current);
       });
   }, [count.current]);
 
