@@ -35,6 +35,7 @@ function SignUp(props) {
 
     await usersRef.doc(signupInfo.email).set({
       name: signupInfo.fullName,
+      currentChat: ""
     });
   };
 

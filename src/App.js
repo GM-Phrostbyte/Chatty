@@ -11,6 +11,8 @@ import Button from "react-bootstrap/Button";
 const auth = firebase.auth();
 const firestore = firebase.firestore();
 
+// delete change state to check if current delete is that delete
+
 // main App component
 function App() {
   const [user] = useAuthState(auth);
@@ -272,7 +274,7 @@ function LetterProfile({ name }) {
 
 function DeleteModal(props) {
   const deleteChat = (currChatId) => {
-    
+
     firestore
     .collection("chats")
     .doc(currChatId)
@@ -293,6 +295,12 @@ function DeleteModal(props) {
         .catch((error) => {
           console.error("Error removing document: ", error);
         });
+        firestore
+        .collection("users")
+        .doc(email)
+        .update({
+          currentChat: ""
+        })
       });
     });
 

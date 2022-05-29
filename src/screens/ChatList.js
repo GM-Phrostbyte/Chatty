@@ -73,8 +73,23 @@ function ChatContact({ details, changeChatId}) {
   const lastMessage = details.isRead ? 'readMessage' : 'unreadMessage';
   const visible = details.isRead ? 'notVisible' : '';
 
+
+  const deleteToEmpty = async() => {
+    const snapshot = await firestore.collection("users").doc(auth.currentUser.email).get();
+    if (!snapshot.data().currentChat) {
+      changeChatId(0, "");
+    }
+  }
+
   const handleChatSelect = () => {
     changeChatId(details.id, details.name);
+
+    firestore
+        .collection("users")
+        .doc(auth.currentUser.email)
+        .onSnapshot(() => {
+          deleteToEmpty();
+      });
   }
 
   return (

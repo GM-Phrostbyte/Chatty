@@ -187,6 +187,14 @@ function ChatPanel(props) {
 
 function LogOutPanel(props) {
 
+  const signOut = () => {
+    console.log("email: " + auth.currentUser.email);
+    firestore.collection('users').doc(auth.currentUser.email).update({
+      currentChat: ""
+    });
+    auth.signOut();
+  }
+
   return (
     <Modal
       {...props}
@@ -203,7 +211,7 @@ function LogOutPanel(props) {
       <Modal.Body>
         <form className='form-actions d-flex justify-content-center align-items-center'>
           <div className='theFunniShape'>
-            <button className='signOut btn btn-primary' onClick={() => auth.signOut()}>SIGN OUT</button>
+            <button className='signOut btn btn-primary' onClick={signOut}>SIGN OUT</button>
           </div>
           <div className='theFunniShape'>
             <Button className='return btn btn-primary' onClick = {props.onHide}>RETURN</Button>
