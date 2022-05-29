@@ -107,17 +107,10 @@ function ChatRoom({
   const usersRef = firestore.collection("users");
   const query = messagesRef.orderBy("createdAt").limitToLast(25);
   const [messages] = useCollectionData(query, { idField: "id" });
-  // const currEmail = auth.currentUser.email;
-
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-
   const [formValue, setFormValue] = useState("");
-
-  useEffect(() => {
-    console.log(currChatId);
-  }, [update, currChatId]);
-
-  const ref = useRef(null);
+  const ref = useRef();
+  const count = useRef(0);
 
   const scrollToBottom = () => {
     ref.current.scrollIntoView({
@@ -126,12 +119,16 @@ function ChatRoom({
   };
 
   useEffect(() => {
+
     if (ref.current) {
       scrollToBottom();
     }
     const chatID = firestore.collection('chats').doc(currChatId);
     chatID.collection('messages').onSnapshot(
       (snapshot) => {
+        count.current = count.current + 1;
+        console.log('bruh count: '+ count.current);
+        scrollToBottom();
         snapshot.docChanges().forEach(() => { // there should only be one change
           console.log("A CHANGE =============");
           scrollToBottom();
